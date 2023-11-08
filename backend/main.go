@@ -2,13 +2,18 @@ package main
 
 import (
 	"fmt"
+	"go-jwt/controller"
 	"go-jwt/driver"
 	models "go-jwt/model"
 	repolize "go-jwt/repository/repoz"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	r := gin.Default()
+
 	mongoDB := driver.ConnectMongoDB()
 	userDo := repolize.NewUserRepo(mongoDB.Client.Database("Library-Management-Database"))
 	bookDo := repolize.NewBookRepo(mongoDB.Client.Database("Library-Management-Database"))
@@ -30,8 +35,8 @@ func main() {
 		Condition:    true,
 		Availability: true,
 		Location:     "H6 first floor",
-		BorrowDate:   time.Date(2023, time.November, 7, 12, 0, 0, 0, time.UTC),  // Year, Month, Day, Hour, Minute, Second, Nanosecond, Timezone
-		ReturnDate:   time.Date(2023, time.November, 14, 12, 0, 0, 0, time.UTC), // Example: one week after BorrowDate
+		BorrowDate:   time.Date(2023, time.November, 7, 12, 0, 0, 0, time.UTC),
+		ReturnDate:   time.Date(2023, time.November, 14, 12, 0, 0, 0, time.UTC),
 	}
 
 	err := userDo.Insert(user)
@@ -42,5 +47,14 @@ func main() {
 	crr := bookDo.InsertBook(book)
 	if crr == nil {
 		fmt.Println("Insert book successfully")
+	}
+
+	// Set up routes
+	bookController := &controller.BookController{Collection: mongoDB.Client.Database("Library-Management-Database").Collection("books")}
+	controller.SetupBookRoutes(r, bookController)
+
+	// Run the server
+	if err := r.Run(":8080"); err != nil {
+		panic(err)
 	}
 }
