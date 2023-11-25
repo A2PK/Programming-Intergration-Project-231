@@ -1,5 +1,3 @@
-import "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./signform.css";
 import Image from "next/image";
 import logo from "public/Logo_BK.png";
