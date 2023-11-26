@@ -2,7 +2,12 @@
 import "./navbar.css";
 import logo from "/public/Logo_BK.png";
 import Image from "next/image";
-import "bootstrap/dist/js/bootstrap.min.js";
+import dynamic from "next/dynamic";
+
+const DynamicBootstrap = dynamic(
+  () => require('bootstrap/dist/js/bootstrap.min.js'),
+  { ssr: false }
+);
 
 const NavBar: React.FC = () => {
   return (
@@ -14,13 +19,13 @@ const NavBar: React.FC = () => {
               <Image
                 src={logo}
                 alt="logo"
-                width="35"
+                width="50"
                 className="d-inline-block align-text-top"
               />
             </div>
             <div className="col">
-              <div id="navBrand1">TRƯỜNG ĐẠI HỌC BÁCH KHOA</div>
               <div id="navBrand2">ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH</div>
+              <div id="navBrand1">TRƯỜNG ĐẠI HỌC BÁCH KHOA</div>
             </div>
           </div>
         </a>

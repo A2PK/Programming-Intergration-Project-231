@@ -1,14 +1,5 @@
-/* styles/globals.css */
 
 .searchbar {
-  justify-content: space-around;
-  background-color: #041735;
-  padding: 1rem;
-}
-.searchbar_searchbox {
-  display: flex;
-  justify-content: space-between;
-}
-.searchbar_searchbox > div {
-  width: 50%;
+  background-color: white;
+  border-radius: 10px;
 }

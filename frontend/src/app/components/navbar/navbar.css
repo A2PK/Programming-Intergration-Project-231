@@ -1,3 +1,13 @@
 #navBrand1, #navBrand2 {
-  font-size: 0.60rem;
+  font-size: 0.9rem;
+}
+
+#navBrand1 {
+  font-weight: 700;
+  color:blue;
+}
+
+#navBrand2 {
+  font-weight: 300;
+  color:rgb(3, 146, 255)
 }
