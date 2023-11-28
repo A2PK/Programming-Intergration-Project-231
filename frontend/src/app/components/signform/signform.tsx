@@ -7,7 +7,7 @@ export default function SignForm({
   text: string;
 }): React.JSX.Element {
   return (
-    <div className="h-100 text-center d-flex justify-content-center align-items-center">
+    <div className="h-100 text-center d-flex justify-content-center align-items-center ">
       <span className="border rounded-3 p-4">
         <form>
           <h1>

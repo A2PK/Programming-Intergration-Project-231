@@ -3,6 +3,7 @@ import "./navbar.css";
 import logo from "/public/Logo_BK.png";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import 'bootstrap/dist/js/bootstrap.min.js';
 
 const DynamicBootstrap = dynamic(
   () => require('bootstrap/dist/js/bootstrap.min.js'),
@@ -42,16 +43,16 @@ const NavBar: React.FC = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <div className="navbar-nav ms-auto">
-            <a className="nav-link" href="#">
+            <a className="nav-link" href="/dashboard/search">
               Books
             </a>
             <a className="nav-link" href="#">
               Account
             </a>
-            <a className="nav-link" href="#">
+            <a className="nav-link" href="/auth/register">
               Register
             </a>
-            <a className="nav-link">Login</a>
+            <a className="nav-link" href="/auth/login">Login</a>
           </div>
         </div>
       </div>
