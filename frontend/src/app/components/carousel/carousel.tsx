@@ -8,10 +8,6 @@ const Carousel = () => {
     <div id="main">
       <div className="container">
         <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" />
-        <Head>
-          <title>Trường Đại học BK</title>
-        </Head>
-        <h1>Trường Đại học BK</h1>
         <div id="carousel-simple" className="carousel slide col-md-6 col-md-offset-3" data-bs-ride="carousel">
           {/* Indicators */}
           <ol className="carousel-indicators">

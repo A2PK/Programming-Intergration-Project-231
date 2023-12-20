@@ -1,70 +1,67 @@
-"use client";
-
-import clsx from 'clsx';
-import Link from 'next/link';
-import Image from 'next/image';
-import Search from '@/app/components/searchbar/search';
-import fetchDataFromGoBackend from "./hook";
-import { useEffect, useState } from 'react';
+"use client"
+import { useState } from 'react';
+import Image from "next/image";
+import book1 from "/public/book3.jpg";
+import Carousel from "@/app/components/carousel/carouselver2";
 
 const SearchPage = () => {
-  const [books, setBooks] = useState([]);
-  useEffect(() => {
-    // Call the function when the component mounts
-    fetchData();
-  }, []);
+  const products = Array.from({ length: 24 }).map((_, index) => ({
+    id: index + 1,
+    title: `Dac Nhan Tam ${index + 1}`,
+    description: 'Some quick example text to build on the card title and make up',
+    image: book1,
+  }));
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/data");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const currentProducts = products.slice(startIndex, endIndex);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
     }
-      const data = await response.json();
-      setBooks(data); // Assuming your data structure is an array of books
-      console.log(data);
-      // Handle the received data as needed
-    } catch (error) {
-      console.error("Error:", error);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
     }
   };
 
   return (
-    /*{ <section className='py-24'>
-      <div className='container'>
-        <div className='mb-12 flex items-center justify-between gap-x-16'>
-          <h1 className='text-3xl font-bold'>Books</h1>
-
-          <div className='grow'>
-            <Search />
-          </div>
-        </div>
-
-        <ul
-          role='list'
-          className='grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 xl:gap-x-8'
-        >
-          {books.map(book => (
-            <li key={book.id.toString()} className='relative'>
-              <div className='group block aspect-square w-full overflow-hidden rounded-lg bg-gray-100'>
-                <Image
-                  src={book.coverImage}
-                  alt=''
-                  className='object-cover group-hover:opacity-75'
-                  width={300}
-                  height={300}
-                />
-              </div>
-              <p className='mt-2 block truncate font-medium'>{book.title}</p>
-            </li>
-          ))}
-        </ul>
+    <div className='container-fluid' style={{ fontFamily: 'Inria Serif, serif' }}>
+      <Carousel />
+      <div>
+        <p className="text-center mx-4 mt-3 fs-2 justify-center fst-italic fw-semibold text-danger-emphasis" style={{ fontFamily: 'Inria Serif, serif' }}>All books</p>
       </div>
-    </section>
-    */
-  <div>
-    Hello
-  </div>
+      <div className="row row-cols-1 row-cols-sm-5 justify-content-center gap-1">
+        {currentProducts.map((product) => (
+          <div key={product.id} className="card col mb-3">
+            <div className="">
+              <Image
+                src={product.image}
+                alt={product.title}
+                style={{ height: '18em' }}
+              />
+            </div>
+            <div className="card-body">
+              <h5 className="card-title">{product.title}</h5>
+              <p className="card-text">{product.description}</p>
+              <a href="#" className="btn btn-primary">View detail</a>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="text-center">
+        <button onClick={handlePrevPage} className='btn btn-warning' disabled={currentPage === 1}>Previous Page</button>
+        <span className="mx-2">Page {currentPage} of {totalPages}</span>
+        <button onClick={handleNextPage} className='btn btn-warning' disabled={currentPage === totalPages}>Next Page</button>
+      </div>
+    </div>
   );
 };
 
