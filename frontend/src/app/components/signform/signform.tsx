@@ -1,6 +1,7 @@
 import "./signform.css";
 import Image from "next/image";
 import logo from "public/Logo_BK.png";
+
 export default function SignForm({
   text,
 }: {
