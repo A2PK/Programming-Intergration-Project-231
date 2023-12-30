@@ -1,178 +1,148 @@
 package controller
 
 import (
-	"context"
 	entity "go-jwt/internal/entity"
+	request "go-jwt/internal/request"
+	usecase "go-jwt/internal/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type BookController struct {
-	Collection *mongo.Collection
+	bookService    usecase.BookUsecase
+	NewBookRequest func() request.BookRequest
 }
 
-func SetupBookRoutes(router *gin.Engine, bc *BookController) {
+func SetupBookRoutes(router *gin.Engine, bookService usecase.BookUsecase) {
+	bookController := BookController{
+		bookService:    bookService,
+		NewBookRequest: request.NewBookRequest,
+	}
+
 	bookRoutes := router.Group("/books")
 	{
-		bookRoutes.GET("/:id", bc.GetByID)
-		bookRoutes.PUT("/:id", bc.UpdateByID)
-		bookRoutes.DELETE("/:id", bc.DeleteByID)
-		bookRoutes.GET("/bookName/", bc.SearchBookByName)
-		bookRoutes.PUT("/books/:id/availability", bc.UpdateBookAvailability)
-		bookRoutes.POST("/books", bc.CreateBook)
+		bookRoutes.GET("/:id", bookController.GetByID)
+		bookRoutes.PUT("/:id", bookController.UpdateByID)
+		bookRoutes.DELETE("/:id", bookController.DeleteByID)
+		bookRoutes.GET("/bookName/", bookController.SearchBooksByName)
+		bookRoutes.PUT("/books/:id/availability", bookController.UpdateBookAvailability)
+		bookRoutes.POST("/books", bookController.CreateBook)
 	}
 }
-func (bc *BookController) CreateBook(c *gin.Context) {
-	var book entity.Book
 
-	if err := c.ShouldBindJSON(&book); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+func (h BookController) CreateBook(ctx *gin.Context) {
+	request := h.NewBookRequest()
+
+	if err := request.Bind(ctx); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	// Insert the book into the database
-	_, err := bc.Collection.InsertOne(context.Background(), book)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	book, error := h.bookService.CreateBook(ctx, &entity.Book{
+		ISBN:         request.GetISBN(),
+		Name:         request.GetName(),
+		Condition:    request.GetCondition(),
+		Availability: request.GetAvailability(),
+		Location:     request.GetLocation(),
+		BorrowDate:   request.GetBorrowDate(),
+		ReturnDate:   request.GetReturnDate(),
+		Author:       request.GetAuthor(),
+		ImageURL:     request.GetImageURL(),
+	})
 
-	// Return the created book
-	c.JSON(http.StatusOK, book)
-}
-func (bc *BookController) GetByID(c *gin.Context) {
-	id := c.Param("id")
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
-		return
+	if error != nil {
+		ctx.AbortWithError(http.StatusBadRequest, error)
 	}
-
-	var book entity.Book
-	filter := bson.M{"_id": objectID}
-	err = bc.Collection.FindOne(context.Background(), filter).Decode(&book)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, book)
+	ctx.JSON(http.StatusOK, book)
 }
 
-// curl -X GET http://localhost:8080/books/PUT_ACTUAL_BOOK_ID_HERE
+func (h BookController) GetByID(ctx *gin.Context) {
+	request := h.NewBookRequest()
 
-func (bc *BookController) UpdateByID(c *gin.Context) {
-	id := c.Param("id")
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+	if err := request.Bind(ctx); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	var updatedBook entity.Book
-	if err := c.ShouldBindJSON(&updatedBook); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	book, error := h.bookService.GetBookByID(ctx, request.GetIDFromURL(ctx))
 
-	filter := bson.M{"_id": objectID}
-	update := bson.M{"$set": updatedBook}
-	_, err = bc.Collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	if error != nil {
+		ctx.AbortWithError(http.StatusBadRequest, error)
 	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Book updated successfully"})
+	ctx.JSON(http.StatusOK, book)
 }
 
-//curl -X PUT -H "Content-Type: application/json" -d '{"uniquecode":"newUniqueCode", "isbn":"newISBN", "name":"New Book Name", "condition":false, "availability":false, "location":"New Location", "borrowdate":"2023-11-10T12:00:00Z", "returndate":"2023-11-17T12:00:00Z"}' http://localhost:8080/books/PUT_ACTUAL_BOOK_ID_HERE
+func (h BookController) UpdateByID(ctx *gin.Context) {
+	request := h.NewBookRequest()
 
-func (bc *BookController) DeleteByID(c *gin.Context) {
-	id := c.Param("id")
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+	if err := request.Bind(ctx); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	filter := bson.M{"_id": objectID}
-	_, err = bc.Collection.DeleteOne(context.Background(), filter)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	book, error := h.bookService.UpdateBookByID(ctx, request.GetIDFromURL(ctx), &entity.Book{
+		ISBN:         request.GetISBN(),
+		Name:         request.GetName(),
+		Condition:    request.GetCondition(),
+		Availability: request.GetAvailability(),
+		Location:     request.GetLocation(),
+		BorrowDate:   request.GetBorrowDate(),
+		ReturnDate:   request.GetReturnDate(),
+		Author:       request.GetAuthor(),
+		ImageURL:     request.GetImageURL(),
+	})
 
-	c.JSON(http.StatusOK, gin.H{"message": "Book deleted successfully"})
+	if error != nil {
+		ctx.AbortWithError(http.StatusBadRequest, error)
+	}
+	ctx.JSON(http.StatusOK, book)
 }
 
-//curl -X DELETE http://localhost:8080/books/PUT_ACTUAL_BOOK_ID_HERE
+func (h BookController) DeleteByID(ctx *gin.Context) {
+	request := h.NewBookRequest()
 
-// this one runnable
-func (bc *BookController) SearchBookByName(c *gin.Context) {
-
-	data := entity.Book{}
-	if err := c.ShouldBindJSON(&data); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+	if err := request.Bind(ctx); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	filter := bson.M{"name": data.Name}
-	var books []entity.Book
+	error := h.bookService.DeleteBookByID(ctx, request.GetIDFromURL(ctx))
 
-	cur, err := bc.Collection.Find(context.Background(), filter)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	if error != nil {
+		ctx.AbortWithError(http.StatusBadRequest, error)
 	}
-
-	defer cur.Close(context.Background())
-	for cur.Next(context.Background()) {
-		var book entity.Book
-		err := cur.Decode(&book)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		books = append(books, book)
-
-	}
-
-	c.JSON(http.StatusOK, books)
+	ctx.JSON(http.StatusOK, error)
 }
 
-//curl -X GET http://localhost:8080/books?name=Games%20of%20thrones
+func (h BookController) SearchBooksByName(ctx *gin.Context) {
+	request := h.NewBookRequest()
 
-func (bc *BookController) UpdateBookAvailability(c *gin.Context) {
-	id := c.Param("id")
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+	if err := request.Bind(ctx); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	var updatedBookAvailability bool
+	books, error := h.bookService.SearchBookByName(ctx, request.GetName())
 
-	if err := c.ShouldBindJSON(&updatedBookAvailability); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if error != nil {
+		ctx.AbortWithError(http.StatusBadRequest, error)
+	}
+	ctx.JSON(http.StatusOK, books)
+}
+
+func (h BookController) UpdateBookAvailability(ctx *gin.Context) {
+	request := h.NewBookRequest()
+
+	if err := request.Bind(ctx); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	// Update the book's availability in the database
-	filter := bson.M{"_id": objectID}
-	update := bson.M{"$set": bson.M{"availability": updatedBookAvailability}}
-	_, err = bc.Collection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	book, error := h.bookService.UpdateBookAvailability(ctx, request.GetIDFromURL(ctx), request.GetAvailability())
 
-	// Return the updated book availability
-	c.JSON(http.StatusOK, gin.H{"availability": updatedBookAvailability})
+	if error != nil {
+		ctx.AbortWithError(http.StatusBadRequest, error)
+	}
+	ctx.JSON(http.StatusOK, book)
 }
