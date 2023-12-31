@@ -5,6 +5,7 @@ import (
 	entity "go-jwt/internal/entity"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -28,20 +29,26 @@ type userRepository struct {
 func (userRepo *userRepository) CreateUser(ctx context.Context, user *entity.User) (*entity.User, error) {
 	bbytes, _ := bson.Marshal(user)
 
-	_, err := userRepo.userCollection.InsertOne(context.Background(), bbytes)
+	result, err := userRepo.userCollection.InsertOne(context.Background(), bbytes)
 	if err != nil {
 		return nil, err
 	}
+
+	//how to get the id of the inserted document
+	user.ID = result.InsertedID.(primitive.ObjectID)
 
 	return user, nil
 }
 
 func (userRepo *userRepository) GetUser(ctx context.Context, id string) (*entity.User, error) {
+
 	user := entity.User{}
+
+	ID, _ := primitive.ObjectIDFromHex(id)
 
 	result := userRepo.userCollection.
 		FindOne(context.Background(),
-			bson.M{"_id": id})
+			bson.M{"_id": ID})
 
 	err := result.Decode(&user)
 
