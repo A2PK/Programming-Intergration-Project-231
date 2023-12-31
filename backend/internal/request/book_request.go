@@ -18,6 +18,7 @@ type BookRequest interface {
 	GetIDFromURL(c *gin.Context) string
 	GetISBN() string
 	GetName() string
+	GetNameFromURL(c *gin.Context) string
 	GetCondition() bool
 	GetAvailability() bool
 	GetLocation() string
@@ -49,6 +50,10 @@ func (r *bookRequest) GetISBN() string {
 
 func (r *bookRequest) GetName() string {
 	return r.book.Name
+}
+
+func (r *bookRequest) GetNameFromURL(c *gin.Context) string {
+	return c.Param("name")
 }
 
 func (r *bookRequest) GetCondition() bool {

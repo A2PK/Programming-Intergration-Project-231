@@ -21,7 +21,7 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 		NewUserRequest: request.NewUserRequest,
 	}
 
-	userRoutes := router.Group("/user")
+	userRoutes := router.Group("/users")
 	{
 		userRoutes.POST("/", userController.create)
 		userRoutes.GET("/:id", userController.get)
