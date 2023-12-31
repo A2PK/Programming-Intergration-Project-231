@@ -34,7 +34,7 @@ type userRequest struct {
 }
 
 func (r *userRequest) Bind(c *gin.Context) error {
-	return c.Bind(r.user)
+	return c.ShouldBindJSON(&r.user)
 }
 
 func (r *userRequest) GetName() string {

@@ -16,7 +16,7 @@ func (s server) SetupControllers() {
 
 	db := driver.ConnectMongoDB()
 
-	// init collection of mongodb
+	// init collection of mongodb to use
 	userCollection := db.Client.Database("Library-Management-Database").Collection("User")
 	bookCollection := db.Client.Database("Library-Management-Database").Collection("Book")
 

@@ -13,6 +13,7 @@ import (
 func (s server) Start() {
 
 	// Set up controllers
+	s.SetupControllers()
 
 	// start server
 	httpServer := &http.Server{

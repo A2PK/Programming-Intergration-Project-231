@@ -32,7 +32,7 @@ type bookRequest struct {
 }
 
 func (r *bookRequest) Bind(c *gin.Context) error {
-	return c.Bind(r.book)
+	return c.ShouldBindJSON(&r.book)
 }
 
 func (r *bookRequest) GetID() string {
