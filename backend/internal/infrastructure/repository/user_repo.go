@@ -17,7 +17,8 @@ func NewUserRepo(userCollection *mongo.Collection) UserRepository {
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *entity.User) (*entity.User, error)
-	GetUser(ctx context.Context, id string) (*entity.User, error)
+	GetUserByID(ctx context.Context, id string) (*entity.User, error)
+	GetUserByUsername(ctx context.Context, username string) (*entity.User, error)
 	UpdateUser(ctx context.Context, id string, data *entity.User) (*entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
 }
@@ -40,7 +41,7 @@ func (userRepo *userRepository) CreateUser(ctx context.Context, user *entity.Use
 	return user, nil
 }
 
-func (userRepo *userRepository) GetUser(ctx context.Context, id string) (*entity.User, error) {
+func (userRepo *userRepository) GetUserByID(ctx context.Context, id string) (*entity.User, error) {
 
 	user := entity.User{}
 
@@ -63,12 +64,35 @@ func (userRepo *userRepository) GetUser(ctx context.Context, id string) (*entity
 	return &user, nil
 }
 
-func (userRepo *userRepository) UpdateUser(ctx context.Context, id string, data *entity.User) (*entity.User, error) {
+func (userRepo *userRepository) GetUserByUsername(ctx context.Context, username string) (*entity.User, error) {
+
 	user := entity.User{}
 
 	result := userRepo.userCollection.
+		FindOne(context.Background(),
+			bson.M{"username": username})
+
+	err := result.Decode(&user)
+
+	if user == (entity.User{}) {
+		return nil, entity.ERR_USER_NOT_FOUND
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (userRepo *userRepository) UpdateUser(ctx context.Context, id string, data *entity.User) (*entity.User, error) {
+	user := entity.User{}
+
+	ID, _ := primitive.ObjectIDFromHex(id)
+
+	result := userRepo.userCollection.
 		FindOneAndUpdate(context.Background(),
-			bson.M{"_id": id},
+			bson.M{"_id": ID},
 			bson.M{
 				"$set": bson.M{
 					"name":      data.Name,
@@ -90,7 +114,8 @@ func (userRepo *userRepository) UpdateUser(ctx context.Context, id string, data 
 }
 
 func (userRepo *userRepository) DeleteUser(ctx context.Context, id string) error {
-	_, err := userRepo.userCollection.DeleteOne(context.Background(), bson.M{"_id": id})
+	ID, _ := primitive.ObjectIDFromHex(id)
+	_, err := userRepo.userCollection.DeleteOne(context.Background(), bson.M{"_id": ID})
 	if err != nil {
 		return err
 	}

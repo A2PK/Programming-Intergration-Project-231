@@ -5,6 +5,7 @@ import (
 	entity "go-jwt/internal/entity"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -28,10 +29,14 @@ type bookRepository struct {
 }
 
 func (bookRepo *bookRepository) CreateBook(ctx context.Context, book *entity.Book) (*entity.Book, error) {
-	_, err := bookRepo.bookCollection.InsertOne(context.Background(), book)
+	bbytes, _ := bson.Marshal(book)
+
+	result, err := bookRepo.bookCollection.InsertOne(context.Background(), bbytes)
 	if err != nil {
 		return nil, err
 	}
+
+	book.ID = result.InsertedID.(primitive.ObjectID)
 
 	return book, nil
 }
@@ -39,7 +44,9 @@ func (bookRepo *bookRepository) CreateBook(ctx context.Context, book *entity.Boo
 func (bookRepo *bookRepository) GetBookByID(ctx context.Context, id string) (*entity.Book, error) {
 	book := entity.Book{}
 
-	filter := bson.M{"_id": id}
+	ID, _ := primitive.ObjectIDFromHex(id)
+
+	filter := bson.M{"_id": ID}
 	result := bookRepo.bookCollection.
 		FindOne(context.Background(),
 			filter)
@@ -107,7 +114,10 @@ func (bookRepo *bookRepository) GetBooksByName(ctx context.Context, name string)
 }
 
 func (bookRepo *bookRepository) UpdateBook(ctx context.Context, id string, data *entity.Book) (*entity.Book, error) {
-	_, err := bookRepo.bookCollection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{"$set": data})
+
+	ID, _ := primitive.ObjectIDFromHex(id)
+
+	_, err := bookRepo.bookCollection.UpdateOne(context.Background(), bson.M{"_id": ID}, bson.M{"$set": data})
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +125,8 @@ func (bookRepo *bookRepository) UpdateBook(ctx context.Context, id string, data 
 }
 
 func (bookRepo *bookRepository) DeleteBook(ctx context.Context, id string) error {
-	_, err := bookRepo.bookCollection.DeleteOne(context.Background(), bson.M{"_id": id})
+	ID, _ := primitive.ObjectIDFromHex(id)
+	_, err := bookRepo.bookCollection.DeleteOne(context.Background(), bson.M{"_id": ID})
 	if err != nil {
 		return err
 	}

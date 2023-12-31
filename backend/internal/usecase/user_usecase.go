@@ -28,7 +28,7 @@ func (s *userUsecase) CreateUser(ctx context.Context, user *entity.User) (*entit
 }
 
 func (s *userUsecase) GetUser(ctx context.Context, id string) (*entity.User, error) {
-	return s.repo.GetUser(ctx, id)
+	return s.repo.GetUserByID(ctx, id)
 }
 
 func (s *userUsecase) UpdateUser(ctx context.Context, id string, data *entity.User) (*entity.User, error) {
