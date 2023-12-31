@@ -1,4 +1,10 @@
-export function PersonalInfo(props: any) {
+interface Props {
+  name: string;
+  ssn: string;
+  phone: string;
+  age: number;
+}
+export function PersonalInfo(props: Props) {
   return (
     <>
       <div className="input-group mb-3">
@@ -11,11 +17,11 @@ export function PersonalInfo(props: any) {
         />
       </div>
       <div className="input-group mb-3">
-        <span className="input-group-text">Email</span>
+        <span className="input-group-text">SSN</span>
         <input
           type="text"
           className="form-control"
-          placeholder={props.email}
+          placeholder={props.ssn}
           disabled
         />
       </div>
@@ -29,11 +35,11 @@ export function PersonalInfo(props: any) {
         />
       </div>
       <div className="input-group mb-3">
-        <span className="input-group-text">Date of Birth</span>
+        <span className="input-group-text">Age</span>
         <input
           type="text"
           className="form-control"
-          placeholder={props.dob}
+          placeholder={String(props.age)}
           disabled
         />
       </div>

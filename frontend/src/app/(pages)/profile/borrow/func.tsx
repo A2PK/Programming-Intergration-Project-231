@@ -1,4 +1,9 @@
-export function BorrowRow(props: any) {
+interface Props {
+  no: number;
+  bname: string;
+  duedate: string;
+}
+export function BorrowRow(props: Props) {
   return (
     <div className="row mb-3">
       <div className="col-1">{props.no}</div>

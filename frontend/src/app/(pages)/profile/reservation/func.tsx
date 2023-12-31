@@ -1,4 +1,10 @@
-export function ReserveRow(props: any) {
+interface Props {
+  no: number;
+  bname: string;
+  pickdate: string;
+  picklocation: string;
+}
+export function ReserveRow(props: Props) {
   return (
     <div className="row mb-3">
       <div className="col-1">{props.no}</div>
