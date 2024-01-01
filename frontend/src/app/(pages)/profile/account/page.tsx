@@ -30,7 +30,7 @@ export default function AccountPage() {
         name={user ? user.name : ""}
         ssn={user ? user.ssn : ""}
         phone={user ? user.phonenum : ""}
-        age={user ? user.age : 0}
+        age={user ? user.age : null}
       />
     </>
   );

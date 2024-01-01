@@ -2,46 +2,26 @@ interface Props {
   name: string;
   ssn: string;
   phone: string;
-  age: number;
+  age: number | null;
 }
 export function PersonalInfo(props: Props) {
   return (
     <>
-      <div className="input-group mb-3">
-        <span className="input-group-text">Name</span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder={props.name}
-          disabled
-        />
+      <div className="row mb-4">
+        <div className="col-2 text-end">Name:</div>
+        <div className="col">{props.name}</div>
       </div>
-      <div className="input-group mb-3">
-        <span className="input-group-text">SSN</span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder={props.ssn}
-          disabled
-        />
+      <div className="row mb-4">
+        <div className="col-2 text-end">SSN:</div>
+        <div className="col">{props.ssn}</div>
       </div>
-      <div className="input-group mb-3">
-        <span className="input-group-text">Phone</span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder={props.phone}
-          disabled
-        />
+      <div className="row mb-4">
+        <div className="col-2 text-end">Phone Number:</div>
+        <div className="col">{props.phone}</div>
       </div>
-      <div className="input-group mb-3">
-        <span className="input-group-text">Age</span>
-        <input
-          type="text"
-          className="form-control"
-          placeholder={String(props.age)}
-          disabled
-        />
+      <div className="row mb-4">
+        <div className="col-2 text-end">Age:</div>
+        <div className="col">{props.age}</div>
       </div>
     </>
   );
