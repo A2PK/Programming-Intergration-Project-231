@@ -62,11 +62,6 @@ func (h BookController) CreateBook(ctx *gin.Context) {
 func (h BookController) GetByID(ctx *gin.Context) {
 	request := h.NewBookRequest()
 
-	if err := request.Bind(ctx); err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
 	book, error := h.bookService.GetBookByID(ctx, request.GetIDFromURL(ctx))
 
 	if error != nil {
@@ -104,11 +99,6 @@ func (h BookController) UpdateByID(ctx *gin.Context) {
 func (h BookController) DeleteByID(ctx *gin.Context) {
 	request := h.NewBookRequest()
 
-	if err := request.Bind(ctx); err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
 	error := h.bookService.DeleteBookByID(ctx, request.GetIDFromURL(ctx))
 
 	if error != nil {
@@ -119,11 +109,6 @@ func (h BookController) DeleteByID(ctx *gin.Context) {
 
 func (h BookController) SearchBooksByName(ctx *gin.Context) {
 	request := h.NewBookRequest()
-
-	if err := request.Bind(ctx); err != nil {
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
 
 	books, error := h.bookService.SearchBookByName(ctx, request.GetNameFromURL(ctx))
 
