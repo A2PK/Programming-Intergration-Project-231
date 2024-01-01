@@ -22,7 +22,7 @@ func SetupBookRoutes(router *gin.Engine, bookService usecase.BookUsecase) {
 
 	bookRoutes := router.Group("/books")
 	{
-		router.Use(CORS())
+		bookRoutes.Use(CORS())
 		bookRoutes.GET("/:id", bookController.GetByID)
 		bookRoutes.POST("/", bookController.CreateBook)
 		bookRoutes.PUT("/:id", bookController.UpdateByID)

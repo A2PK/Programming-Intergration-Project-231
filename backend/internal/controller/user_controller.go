@@ -23,7 +23,7 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 
 	userRoutes := router.Group("/users")
 	{
-		router.Use(CORS())
+		userRoutes.Use(CORS())
 		userRoutes.POST("/", userController.create)
 		userRoutes.GET("/:id", userController.get)
 		userRoutes.PUT("/:id", userController.update)
