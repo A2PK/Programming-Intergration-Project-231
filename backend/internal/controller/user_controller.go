@@ -136,7 +136,8 @@ func (h UserController) login(ctx *gin.Context) {
 	if err != nil {
 		fmt.Println("login user failed:", err.Error())
 		ctx.AbortWithError(http.StatusBadRequest, err)
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "login failed", "error": err.Error()})
+		// 404 not found http status code
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "login failed", "error": err.Error()})
 		return
 	}
 
