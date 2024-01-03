@@ -48,8 +48,6 @@ func (h BookController) CreateBook(ctx *gin.Context) {
 		Condition:    request.GetCondition(),
 		Availability: request.GetAvailability(),
 		Location:     request.GetLocation(),
-		BorrowDate:   request.GetBorrowDate(),
-		ReturnDate:   request.GetReturnDate(),
 		Author:       request.GetAuthor(),
 		ImageURL:     request.GetImageURL(),
 	})
@@ -83,13 +81,19 @@ func (h BookController) UpdateByID(ctx *gin.Context) {
 	book, error := h.bookService.UpdateBookByID(ctx, request.GetIDFromURL(ctx), &entity.Book{
 		ISBN:         request.GetISBN(),
 		Name:         request.GetName(),
+		Author:       request.GetAuthor(),
+		Genre:        request.GetGenre(),
+		Description:  request.GetDescription(),
+		Publisher:    request.GetPublisher(),
+		PublishDate:  request.GetPulishDate(),
+		TotalPages:   request.GetTotalPages(),
 		Condition:    request.GetCondition(),
 		Availability: request.GetAvailability(),
 		Location:     request.GetLocation(),
-		BorrowDate:   request.GetBorrowDate(),
-		ReturnDate:   request.GetReturnDate(),
-		Author:       request.GetAuthor(),
 		ImageURL:     request.GetImageURL(),
+		StartDate:    request.GetStartDate(),
+		EndDate:      request.GetEndDate(),
+		ExtendedDate: request.GetExtendedDate(),
 	})
 
 	if error != nil {

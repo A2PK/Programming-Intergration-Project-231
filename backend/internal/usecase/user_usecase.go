@@ -89,11 +89,18 @@ func (s *userUsecase) ReserveBook(ctx context.Context, userID string, bookID str
 		return nil, entity.ERR_BOOK_NOT_FOUND
 	}
 
-	// if book.Availability != 0 {
-	// 	return nil, entity.ERR_BOOK_NOT_AVAILABLE
-	// }
+	if book.Availability != 0 {
+		return nil, entity.ERR_BOOK_NOT_AVAILABLE
+	}
+
+	startDate := time.Now()
+	endDate := startDate.AddDate(0, 0, 7)
+	extendedDate := time.Time{}
 
 	book.Availability = 2 // 2 = reserved
+	book.StartDate = startDate
+	book.EndDate = endDate
+	book.ExtendedDate = extendedDate
 
 	// update book availability
 	book, err = s.bookRepo.UpdateBook(ctx, bookID, book)
@@ -103,12 +110,11 @@ func (s *userUsecase) ReserveBook(ctx context.Context, userID string, bookID str
 	}
 
 	user.ReservingList = append(user.ReservingList, entity.UserActivity{
-		BookId:    book.ID,
-		BookName:  book.Name,
-		StartDate: time.Now(),
-		EndDate:   time.Now().AddDate(0, 0, 7),
-		// extendedDate assign null of time.Time
-		ExtendedDate: time.Time{},
+		BookId:       book.ID,
+		BookName:     book.Name,
+		StartDate:    startDate,
+		EndDate:      endDate,
+		ExtendedDate: extendedDate,
 	})
 
 	// update user reserving book

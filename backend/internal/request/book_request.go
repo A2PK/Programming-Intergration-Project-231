@@ -22,10 +22,16 @@ type BookRequest interface {
 	GetCondition() bool
 	GetAvailability() int
 	GetLocation() string
-	GetBorrowDate() time.Time
-	GetReturnDate() time.Time
+	GetStartDate() time.Time
+	GetEndDate() time.Time
+	GetExtendedDate() time.Time
 	GetAuthor() string
 	GetImageURL() string
+	GetGenre() string
+	GetTotalPages() int
+	GetDescription() string
+	GetPublisher() string
+	GetPulishDate() time.Time
 }
 
 type bookRequest struct {
@@ -68,12 +74,16 @@ func (r *bookRequest) GetLocation() string {
 	return r.book.Location
 }
 
-func (r *bookRequest) GetBorrowDate() time.Time {
-	return r.book.BorrowDate
+func (r *bookRequest) GetStartDate() time.Time {
+	return r.book.StartDate
 }
 
-func (r *bookRequest) GetReturnDate() time.Time {
-	return r.book.ReturnDate
+func (r *bookRequest) GetEndDate() time.Time {
+	return r.book.EndDate
+}
+
+func (r *bookRequest) GetExtendedDate() time.Time {
+	return r.book.ExtendedDate
 }
 
 func (r *bookRequest) GetAuthor() string {
@@ -82,6 +92,26 @@ func (r *bookRequest) GetAuthor() string {
 
 func (r *bookRequest) GetImageURL() string {
 	return r.book.ImageURL
+}
+
+func (r *bookRequest) GetGenre() string {
+	return r.book.Genre
+}
+
+func (r *bookRequest) GetTotalPages() int {
+	return r.book.TotalPages
+}
+
+func (r *bookRequest) GetDescription() string {
+	return r.book.Description
+}
+
+func (r *bookRequest) GetPublisher() string {
+	return r.book.Publisher
+}
+
+func (r *bookRequest) GetPulishDate() time.Time {
+	return r.book.PublishDate
 }
 
 // func (r *bookRequest) Validate() error {

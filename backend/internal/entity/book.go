@@ -27,9 +27,10 @@ type Book struct {
 	Condition    bool               `json:"condition" bson:"condition"`
 	Availability int                `json:"availability" bson:"availability"` // availiblity enum (0,1,2,3) 0:available 1:unavailable 2:reserved 3:borrowed
 	Location     string             `json:"location" bson:"location"`
-	BorrowDate   time.Time          `json:"borrowdate" bson:"borrowdate"` // if needed
-	ReturnDate   time.Time          `json:"returndate" bson:"returndate"` // if needed
 	ImageURL     string             `json:"image_url" bson:"image_url"`
+	StartDate    time.Time          `json:"startdate" bson:"startdate"`
+	EndDate      time.Time          `json:"enddate" bson:"enddate"`
+	ExtendedDate time.Time          `json:"extendeddate" bson:"extendeddate"`
 }
 
 type BookReplacementList struct {
