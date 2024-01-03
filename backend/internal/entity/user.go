@@ -1,8 +1,8 @@
 package model
 
 import (
-	"encoding/json"
 	"errors"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -23,16 +23,17 @@ type User struct {
 	CountFine     int                `json:"countfine" bson:"countfine"`
 	Username      string             `json:"username" bson:"username"`
 	Password      string             `json:"password" bson:"password"`
-	Reservinglist json.RawMessage    `json:"reservinglist" bson:"reservinglist"`
-	// reservinglist: [{
-	// 	"bookId": "123456789",
-	//  "bookName": "Harry Potter",
-	// 	"startDate": "2021-05-01",
-	// 	"endDate": "2021-05-08",
-	//  "extendedDate": "2021-05-15",
-	// },...]
-	Borrowinglist json.RawMessage `json:"borrowinglist" bson:"borrowinglist"` //nearly like above
-	Borrowedlist  json.RawMessage `json:"borrowedlist" bson:"borrowedlist"`
+	ReservingList []UserActivity     `json:"reservinglist" bson:"reservinglist"`
+	BorrowingList []UserActivity     `json:"borrowinglist" bson:"borrowinglist"`
+	BorrowedList  []UserActivity     `json:"borrowedlist" bson:"borrowedlist"`
+}
+
+type UserActivity struct {
+	BookId       primitive.ObjectID `json:"bookId" bson:"bookId"`
+	BookName     string             `json:"bookName" bson:"bookName"`
+	StartDate    time.Time          `json:"startDate" bson:"startDate"`
+	EndDate      time.Time          `json:"endDate" bson:"endDate"`
+	ExtendedDate time.Time          `json:"extendedDate" bson:"extendedDate"`
 }
 
 // type Member struct {

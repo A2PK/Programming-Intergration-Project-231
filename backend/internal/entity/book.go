@@ -9,8 +9,9 @@ import (
 
 // Define Errors
 var (
-	ERR_BOOK_NOT_FOUND     = errors.New("Book not found")
-	ERR_BOOK_NOT_AVAILABLE = errors.New("Book not available")
+	ERR_BOOK_NOT_FOUND                = errors.New("Book not found")
+	ERR_BOOK_NOT_AVAILABLE            = errors.New("Book not available")
+	ERR_BOOK_RESERVE_ALREADY_EXTENDED = errors.New("Book reservation already extended")
 )
 
 type Book struct {
