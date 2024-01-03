@@ -29,6 +29,8 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 		userRoutes.PUT("/:id", userController.update)
 		userRoutes.DELETE("/:id", userController.delete)
 		userRoutes.POST("/login", userController.login)
+		userRoutes.POST("/:id/reserve/:bookId", userController.reserve)
+		userRoutes.POST("/:id/extendReserve/:bookId", userController.extendReserve)
 	}
 }
 
@@ -138,6 +140,38 @@ func (h UserController) login(ctx *gin.Context) {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "login failed", "error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
+}
+
+func (h UserController) reserve(ctx *gin.Context) {
+	request := h.NewUserRequest()
+
+	user, err := h.userService.ReserveBook(ctx, request.GetIDFromURL(ctx), request.GetBookIDFromURL(ctx))
+
+	if err != nil {
+		fmt.Println("reserve book failed:", err.Error())
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		// 404 not found http status code
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "reserve failed", "error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
+}
+
+func (h UserController) extendReserve(ctx *gin.Context) {
+	request := h.NewUserRequest()
+
+	user, err := h.userService.ExtendReserveBook(ctx, request.GetIDFromURL(ctx), request.GetBookIDFromURL(ctx))
+
+	if err != nil {
+		fmt.Println("extend reserve book failed:", err.Error())
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		// 404 not found http status code
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "extend reserve failed", "error": err.Error()})
 		return
 	}
 

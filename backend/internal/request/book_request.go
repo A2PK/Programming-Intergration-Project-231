@@ -20,7 +20,7 @@ type BookRequest interface {
 	GetName() string
 	GetNameFromURL(c *gin.Context) string
 	GetCondition() bool
-	GetAvailability() bool
+	GetAvailability() int
 	GetLocation() string
 	GetBorrowDate() time.Time
 	GetReturnDate() time.Time
@@ -60,7 +60,7 @@ func (r *bookRequest) GetCondition() bool {
 	return r.book.Condition
 }
 
-func (r *bookRequest) GetAvailability() bool {
+func (r *bookRequest) GetAvailability() int {
 	return r.book.Availability
 }
 

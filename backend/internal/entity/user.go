@@ -7,8 +7,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var ERR_USER_PASSWORD_NOT_MATCH = errors.New("Password not match")
-var ERR_USER_NOT_FOUND = errors.New("User not found")
+var (
+	ERR_USER_PASSWORD_NOT_MATCH = errors.New("Password not match")
+	ERR_USER_NOT_FOUND          = errors.New("User not found")
+	ERR_USER_FINE_EXCEED        = errors.New("User fine exceeds the limit")
+)
 
 type User struct {
 	ID            primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`

@@ -23,6 +23,7 @@ type UserRequest interface {
 	GetSSN() string
 	GetRole() int
 	GetCountFine() int
+	GetBookIDFromURL(c *gin.Context) string
 	// GetToken() string
 	// GetRefreshToken() string
 	// GetExpireTime() int64
@@ -75,6 +76,10 @@ func (r *userRequest) GetRole() int {
 
 func (r *userRequest) GetCountFine() int {
 	return r.user.CountFine
+}
+
+func (r *userRequest) GetBookIDFromURL(c *gin.Context) string {
+	return c.Param("bookId")
 }
 
 // func (r *userRequest) GetToken() string {

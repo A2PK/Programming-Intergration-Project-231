@@ -36,7 +36,7 @@ func (s server) SetupControllers() {
 	bookRepo := repo.NewBookRepo(bookCollection)
 
 	// init usecase
-	userUsecase := usecase.NewUserUsecase(userRepo)
+	userUsecase := usecase.NewUserUsecase(userRepo, bookRepo)
 	bookUsecase := usecase.NewBookUsecase(bookRepo)
 
 	// init controller

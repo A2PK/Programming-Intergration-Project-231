@@ -19,7 +19,7 @@ type BookUsecase interface {
 	DeleteBookByID(ctx context.Context, id string) error
 	SearchBookByName(ctx context.Context, name string) ([]*entity.Book, error)
 	GetAllBooks(ctx context.Context) ([]*entity.Book, error)
-	UpdateBookAvailability(ctx context.Context, id string, availability bool) (*entity.Book, error)
+	UpdateBookAvailability(ctx context.Context, id string, availability int) (*entity.Book, error)
 }
 
 type bookUsecase struct {
@@ -50,7 +50,7 @@ func (s *bookUsecase) GetAllBooks(ctx context.Context) ([]*entity.Book, error) {
 	return s.repo.GetAllBooks(ctx)
 }
 
-func (s *bookUsecase) UpdateBookAvailability(ctx context.Context, id string, availability bool) (*entity.Book, error) {
+func (s *bookUsecase) UpdateBookAvailability(ctx context.Context, id string, availability int) (*entity.Book, error) {
 	data := &entity.Book{
 		Availability: availability,
 	}
