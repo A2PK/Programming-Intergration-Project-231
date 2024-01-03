@@ -7,15 +7,9 @@ import { useEffect, useState } from "react";
 export default function AccountPage() {
   const [user, setUser] = useState<User>();
 
-  const fetchData = () => {
-    const data = getUser()
-      .then((data) => {
-        const temp: User = data;
-        setUser(temp);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const fetchData = async () => {
+    const data = await getUser();
+    setUser(data);
   };
 
   useEffect(() => {
