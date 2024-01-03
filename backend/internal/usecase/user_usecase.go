@@ -22,7 +22,8 @@ type UserUsecase interface {
 	DeleteUser(ctx context.Context, id string) error
 	AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, error)
 	ReserveBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
-	ExtendReserveBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
+	BorrowBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
+	ExtendBorrowBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
 }
 
 type userUsecase struct {
@@ -94,7 +95,7 @@ func (s *userUsecase) ReserveBook(ctx context.Context, userID string, bookID str
 	}
 
 	startDate := time.Now()
-	endDate := startDate.AddDate(0, 0, 7)
+	endDate := startDate.AddDate(0, 0, 3)
 	extendedDate := time.Time{}
 
 	book.Availability = 2 // 2 = reserved
@@ -130,7 +131,73 @@ func (s *userUsecase) ReserveBook(ctx context.Context, userID string, bookID str
 	return user, nil
 }
 
-func (s *userUsecase) ExtendReserveBook(ctx context.Context, userID string, bookID string) (*entity.User, error) {
+func (s *userUsecase) BorrowBook(ctx context.Context, userID string, bookID string) (*entity.User, error) {
+	user, err := s.userRepo.GetUserByID(ctx, userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, entity.ERR_USER_NOT_FOUND
+	}
+
+	if user.CountFine > 2 {
+		return nil, entity.ERR_USER_FINE_EXCEED
+	}
+
+	book, err := s.bookRepo.GetBookByID(ctx, bookID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if book == nil {
+		return nil, entity.ERR_BOOK_NOT_FOUND
+	}
+
+	if book.Availability != 0 {
+		return nil, entity.ERR_BOOK_NOT_AVAILABLE
+	}
+
+	startDate := time.Now()
+	endDate := startDate.AddDate(0, 0, 7)
+	extendedDate := time.Time{}
+
+	book.Availability = 3 // 3 = borrowed
+	book.StartDate = startDate
+	book.EndDate = endDate
+	book.ExtendedDate = extendedDate
+
+	// update book availability
+	book, err = s.bookRepo.UpdateBook(ctx, bookID, book)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.BorrowingList = append(user.BorrowingList, entity.UserActivity{
+		BookId:       book.ID,
+		BookName:     book.Name,
+		StartDate:    startDate,
+		EndDate:      endDate,
+		ExtendedDate: extendedDate,
+	})
+
+	// update user reserving book
+	user, err = s.userRepo.UpdateUser(ctx, userID, user)
+
+	//print user after
+	fmt.Println("user after", user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *userUsecase) ExtendBorrowBook(ctx context.Context, userID string, bookID string) (*entity.User, error) {
 	user, err := s.userRepo.GetUserByID(ctx, userID)
 
 	if err != nil {
@@ -155,10 +222,10 @@ func (s *userUsecase) ExtendReserveBook(ctx context.Context, userID string, book
 		return nil, err
 	}
 
-	for i := 0; i < len(user.ReservingList); i++ {
-		if user.ReservingList[i].BookId == book.ID {
-			if user.ReservingList[i].ExtendedDate.IsZero() {
-				user.ReservingList[i].ExtendedDate = user.ReservingList[i].EndDate.AddDate(0, 0, 7)
+	for i := 0; i < len(user.BorrowingList); i++ {
+		if user.BorrowingList[i].BookId == book.ID {
+			if user.BorrowingList[i].ExtendedDate.IsZero() {
+				user.BorrowingList[i].ExtendedDate = user.BorrowingList[i].EndDate.AddDate(0, 0, 7)
 			} else {
 				return nil, entity.ERR_BOOK_RESERVE_ALREADY_EXTENDED
 			}

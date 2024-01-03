@@ -30,7 +30,8 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 		userRoutes.DELETE("/:id", userController.delete)
 		userRoutes.POST("/login", userController.login)
 		userRoutes.POST("/:id/reserve/:bookId", userController.reserve)
-		userRoutes.POST("/:id/extendReserve/:bookId", userController.extendReserve)
+		userRoutes.POST("/:id/extendReserve/:bookId", userController.borrow)
+		userRoutes.POST("/:id/extendBorrow/:bookId", userController.extendBorrow)
 	}
 }
 
@@ -149,31 +150,47 @@ func (h UserController) login(ctx *gin.Context) {
 func (h UserController) reserve(ctx *gin.Context) {
 	request := h.NewUserRequest()
 
-	user, err := h.userService.ReserveBook(ctx, request.GetIDFromURL(ctx), request.GetBookIDFromURL(ctx))
+	_, err := h.userService.ReserveBook(ctx, request.GetIDFromURL(ctx), request.GetBookIDFromURL(ctx))
 
 	if err != nil {
 		fmt.Println("reserve book failed:", err.Error())
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
-		ctx.JSON(http.StatusNotFound, gin.H{"message": "reserve failed", "error": err.Error()})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "Reservation failed", "error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Reservation successful"})
 }
 
-func (h UserController) extendReserve(ctx *gin.Context) {
+func (h UserController) borrow(ctx *gin.Context) {
 	request := h.NewUserRequest()
 
-	user, err := h.userService.ExtendReserveBook(ctx, request.GetIDFromURL(ctx), request.GetBookIDFromURL(ctx))
+	_, err := h.userService.BorrowBook(ctx, request.GetIDFromURL(ctx), request.GetBookIDFromURL(ctx))
+
+	if err != nil {
+		fmt.Println("borrow book failed:", err.Error())
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		// 404 not found http status code
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "Borrow failed", "error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Borrow successful"})
+}
+
+func (h UserController) extendBorrow(ctx *gin.Context) {
+	request := h.NewUserRequest()
+
+	_, err := h.userService.ExtendBorrowBook(ctx, request.GetIDFromURL(ctx), request.GetBookIDFromURL(ctx))
 
 	if err != nil {
 		fmt.Println("extend reserve book failed:", err.Error())
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
-		ctx.JSON(http.StatusNotFound, gin.H{"message": "extend reserve failed", "error": err.Error()})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "Borrow extend failed", "error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Borrow extend successful"})
 }
