@@ -92,7 +92,7 @@ func (bookRepo *bookRepository) GetBooksByISBN(ctx context.Context, isbn string)
 func (bookRepo *bookRepository) GetBooksByName(ctx context.Context, name string) ([]*entity.Book, error) {
 	books := []*entity.Book{}
 
-	filter := bson.M{"name": name}
+	filter := bson.M{"name": bson.M{"$regex": primitive.Regex{Pattern: name, Options: "i"}}}
 	result, err := bookRepo.bookCollection.Find(context.Background(), filter)
 
 	if err != nil {
