@@ -28,6 +28,7 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 		userRoutes.GET("/:id", userController.get)
 		userRoutes.PUT("/:id", userController.update)
 		userRoutes.DELETE("/:id", userController.delete)
+		userRoutes.POST("/login", userController.login)
 	}
 }
 
@@ -35,7 +36,7 @@ func (h UserController) create(ctx *gin.Context) {
 	request := h.NewUserRequest()
 
 	if err := request.Bind(ctx); err != nil {
-		fmt.Println("bind user failed", err.Error())
+		fmt.Println("bind user failed:", err.Error())
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -57,7 +58,9 @@ func (h UserController) create(ctx *gin.Context) {
 		CountFine: request.GetCountFine(),
 	})
 	if error != nil {
-		fmt.Println("create user failed", error.Error())
+		fmt.Println("create user failed:", error.Error())
+		ctx.AbortWithError(http.StatusBadRequest, error)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "create failed", "error": error.Error()})
 	}
 	ctx.JSON(http.StatusOK, user)
 }
@@ -69,8 +72,9 @@ func (h UserController) get(ctx *gin.Context) {
 	user, err := h.userService.GetUser(ctx, request.GetIDFromURL(ctx))
 
 	if err != nil {
-		fmt.Println("get user failed", err.Error())
+		fmt.Println("get user failed:", err.Error())
 		ctx.AbortWithError(http.StatusBadRequest, err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "get failed", "error": err.Error()})
 		return
 	}
 
@@ -81,7 +85,7 @@ func (h UserController) update(ctx *gin.Context) {
 	request := h.NewUserRequest()
 
 	if err := request.Bind(ctx); err != nil {
-		fmt.Println("bind user failed", err.Error())
+		fmt.Println("bind user failed:", err.Error())
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
@@ -93,8 +97,9 @@ func (h UserController) update(ctx *gin.Context) {
 	})
 
 	if err != nil {
-		fmt.Println("update user failed", err.Error())
+		fmt.Println("update user failed:", err.Error())
 		ctx.AbortWithError(http.StatusBadRequest, err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "update failed", "error": err.Error()})
 		return
 	}
 
@@ -107,10 +112,33 @@ func (h UserController) delete(ctx *gin.Context) {
 	err := h.userService.DeleteUser(ctx, request.GetIDFromURL(ctx))
 
 	if err != nil {
-		fmt.Println("delete user failed", err.Error())
+		fmt.Println("delete user failed:", err.Error())
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "user deleted"})
+}
+
+func (h UserController) login(ctx *gin.Context) {
+	request := h.NewUserRequest()
+
+	if err := request.Bind(ctx); err != nil {
+		fmt.Println("bind user failed:", err.Error())
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	fmt.Print(request.GetUsername(), request.GetPassword())
+
+	user, err := h.userService.AuthenticateUser(ctx, request.GetUsername(), request.GetPassword())
+
+	if err != nil {
+		fmt.Println("login user failed:", err.Error())
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "login failed", "error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
 }

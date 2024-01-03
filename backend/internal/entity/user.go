@@ -2,9 +2,13 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+var ERR_USER_PASSWORD_NOT_MATCH = errors.New("Password not match")
+var ERR_USER_NOT_FOUND = errors.New("User not found")
 
 type User struct {
 	ID            primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`

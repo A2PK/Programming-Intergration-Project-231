@@ -17,6 +17,7 @@ type UserUsecase interface {
 	GetUser(ctx context.Context, id string) (*entity.User, error)
 	UpdateUser(ctx context.Context, id string, data *entity.User) (*entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
+	AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, error)
 }
 
 type userUsecase struct {
@@ -37,4 +38,22 @@ func (s *userUsecase) UpdateUser(ctx context.Context, id string, data *entity.Us
 
 func (s *userUsecase) DeleteUser(ctx context.Context, id string) error {
 	return s.repo.DeleteUser(ctx, id)
+}
+
+func (s *userUsecase) AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, error) {
+	user, err := s.repo.GetUserByUsername(ctx, username)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, entity.ERR_USER_NOT_FOUND
+	}
+
+	if user.Password != password {
+		return nil, entity.ERR_USER_PASSWORD_NOT_MATCH
+	}
+
+	return user, nil
 }
