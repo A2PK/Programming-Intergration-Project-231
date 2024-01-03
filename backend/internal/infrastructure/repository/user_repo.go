@@ -53,12 +53,12 @@ func (userRepo *userRepository) GetUserByID(ctx context.Context, id string) (*en
 
 	err := result.Decode(&user)
 
-	if user == (entity.User{}) {
-		return nil, entity.ERR_USER_NOT_FOUND
-	}
-
 	if err != nil {
 		return nil, err
+	}
+
+	if user.Name == "" {
+		return nil, entity.ERR_USER_NOT_FOUND
 	}
 
 	return &user, nil
@@ -74,12 +74,12 @@ func (userRepo *userRepository) GetUserByUsername(ctx context.Context, username 
 
 	err := result.Decode(&user)
 
-	if user == (entity.User{}) {
-		return nil, entity.ERR_USER_NOT_FOUND
-	}
-
 	if err != nil {
 		return nil, err
+	}
+
+	if user.Name == "" {
+		return nil, entity.ERR_USER_NOT_FOUND
 	}
 
 	return &user, nil

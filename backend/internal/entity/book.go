@@ -11,16 +11,22 @@ import (
 var ERR_BOOK_NOT_FOUND = errors.New("Book not found")
 
 type Book struct {
-	ID           primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	ISBN         string             `json:"isbn" bson:"isbn"`
-	Name         string             `json:"name" bson:"name"`
-	Condition    bool               `json:"condition" bson:"condition"`
-	Availability bool               `json:"availability" bson:"availability"`
-	Location     string             `json:"location" bson:"location"`
-	BorrowDate   time.Time          `json:"borrowdate" bson:"borrowdate"` // if needed
-	ReturnDate   time.Time          `json:"returndate" bson:"returndate"` // if needed
-	Author       string             `json:"author" bson:"author"`
-	ImageURL     string             `json:"image_url" bson:"image_url"`
+	ID                 primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	ISBN               string             `json:"isbn" bson:"isbn"`
+	Name               string             `json:"name" bson:"name"`
+	Genre              string             `json:"genre" bson:"genre"`
+	Description        string             `json:"description" bson:"description"`
+	Author             string             `json:"author" bson:"author"`
+	Publisher          string             `json:"publisher" bson:"publisher"`
+	PublishDate        time.Time          `json:"publishdate" bson:"publishdate"`
+	TotalPages         int                `json:"totalpages" bson:"totalpages"`
+	Condition          bool               `json:"condition" bson:"condition"`
+	Availability       bool               `json:"availability" bson:"availability"`
+	Location           string             `json:"location" bson:"location"`
+	BorrowDate         time.Time          `json:"borrowdate" bson:"borrowdate"` // if needed
+	ReturnDate         time.Time          `json:"returndate" bson:"returndate"` // if needed
+	ImageURL           string             `json:"image_url" bson:"image_url"`
+	ReservedOrBorrowed bool               `json:"reservedorborrowed" bson:"reservedorborrowed"`
 }
 
 type BookReplacementList struct {

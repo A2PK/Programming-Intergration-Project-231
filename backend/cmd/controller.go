@@ -20,6 +20,17 @@ func (s server) SetupControllers() {
 	userCollection := db.Client.Database("Library-Management-Database").Collection("User")
 	bookCollection := db.Client.Database("Library-Management-Database").Collection("Book")
 
+	// // create constraint unqiue username for User collection
+	// indexOptions := options.Index().SetUnique(true)
+	// indexKeys := bson.M{"username": 1}
+	// result, err := userCollection.Indexes().CreateOne(context.Background(), mongo.IndexModel{Keys: indexKeys, Options: indexOptions})
+
+	// if err != nil {
+	// 	panic(err)
+	// } else {
+	// 	fmt.Println(result)
+	// }
+
 	// init repository
 	userRepo := repo.NewUserRepo(userCollection)
 	bookRepo := repo.NewBookRepo(bookCollection)
