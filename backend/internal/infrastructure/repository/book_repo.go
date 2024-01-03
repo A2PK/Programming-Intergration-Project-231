@@ -20,6 +20,7 @@ type BookRepository interface {
 	GetBookByID(ctx context.Context, id string) (*entity.Book, error)
 	GetBooksByISBN(ctx context.Context, isbn string) ([]*entity.Book, error)
 	GetBooksByName(ctx context.Context, name string) ([]*entity.Book, error)
+	GetAllBooks(ctx context.Context) ([]*entity.Book, error)
 	UpdateBook(ctx context.Context, id string, data *entity.Book) (*entity.Book, error)
 	DeleteBook(ctx context.Context, id string) error
 }
@@ -95,6 +96,28 @@ func (bookRepo *bookRepository) GetBooksByName(ctx context.Context, name string)
 	filter := bson.M{"name": bson.M{"$regex": primitive.Regex{Pattern: name, Options: "i"}}}
 	result, err := bookRepo.bookCollection.Find(context.Background(), filter)
 
+	if err != nil {
+		return nil, err
+	}
+
+	defer result.Close(context.Background())
+
+	for result.Next(context.Background()) {
+		var book entity.Book
+		err := result.Decode(&book)
+		if err != nil {
+			return nil, err
+		}
+		books = append(books, &book)
+	}
+
+	return books, nil
+}
+
+func (bookRepo *bookRepository) GetAllBooks(ctx context.Context) ([]*entity.Book, error) {
+	books := []*entity.Book{}
+
+	result, err := bookRepo.bookCollection.Find(context.Background(), bson.M{})
 	if err != nil {
 		return nil, err
 	}

@@ -28,6 +28,7 @@ func SetupBookRoutes(router *gin.Engine, bookService usecase.BookUsecase) {
 		bookRoutes.PUT("/:id", bookController.UpdateByID)
 		bookRoutes.DELETE("/:id", bookController.DeleteByID)
 		bookRoutes.GET("/search/:name", bookController.SearchBooksByName)
+		bookRoutes.GET("/getAll", bookController.GetAllBooks)
 		bookRoutes.PUT("/:id/availability", bookController.UpdateBookAvailability)
 
 	}
@@ -56,6 +57,7 @@ func (h BookController) CreateBook(ctx *gin.Context) {
 	if error != nil {
 		ctx.AbortWithError(http.StatusBadRequest, error)
 	}
+
 	ctx.JSON(http.StatusOK, book)
 }
 
@@ -115,6 +117,16 @@ func (h BookController) SearchBooksByName(ctx *gin.Context) {
 	if error != nil {
 		ctx.AbortWithError(http.StatusBadRequest, error)
 	}
+	ctx.JSON(http.StatusOK, books)
+}
+
+func (h BookController) GetAllBooks(ctx *gin.Context) {
+	books, error := h.bookService.GetAllBooks(ctx)
+
+	if error != nil {
+		ctx.AbortWithError(http.StatusBadRequest, error)
+	}
+
 	ctx.JSON(http.StatusOK, books)
 }
 

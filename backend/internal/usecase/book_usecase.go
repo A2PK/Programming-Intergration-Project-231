@@ -18,6 +18,7 @@ type BookUsecase interface {
 	UpdateBookByID(ctx context.Context, id string, data *entity.Book) (*entity.Book, error)
 	DeleteBookByID(ctx context.Context, id string) error
 	SearchBookByName(ctx context.Context, name string) ([]*entity.Book, error)
+	GetAllBooks(ctx context.Context) ([]*entity.Book, error)
 	UpdateBookAvailability(ctx context.Context, id string, availability bool) (*entity.Book, error)
 }
 
@@ -43,6 +44,10 @@ func (s *bookUsecase) DeleteBookByID(ctx context.Context, id string) error {
 
 func (s *bookUsecase) SearchBookByName(ctx context.Context, name string) ([]*entity.Book, error) {
 	return s.repo.GetBooksByName(ctx, name)
+}
+
+func (s *bookUsecase) GetAllBooks(ctx context.Context) ([]*entity.Book, error) {
+	return s.repo.GetAllBooks(ctx)
 }
 
 func (s *bookUsecase) UpdateBookAvailability(ctx context.Context, id string, availability bool) (*entity.Book, error) {
