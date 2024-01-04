@@ -6,12 +6,28 @@ import Carousel from "@/app/components/carousel/carouselver2";
 import SearchBar from "@/app/components/searchbar/searchbarver2";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-const SearchPage = () => {
+import { redirect } from "next/navigation";
+const SearchPage = ({
+  searchParams,
+}: {
+  searchParams: {
+      value: string;
+  };
+}) => {
   const [bookdata, setData] = useState([]);
   useEffect(() => {
     // Retrieve search value from localStorage
-    const searchValue = localStorage.getItem('searchValue');
-
+    let searchValue = localStorage.getItem('searchValue');
+    if (searchValue && searchValue != "") {
+      localStorage.removeItem("searchValue");
+      redirect("./search?value=" + searchValue);
+  } else {
+      console.log("no success")
+  }
+    if(searchParams && searchParams.value != "")
+    {
+      searchValue = searchParams.value;
+    }
     // Filter products based on search value
     if (searchValue && searchValue != "") {
       //redirect("./search");
@@ -19,14 +35,14 @@ const SearchPage = () => {
         .then(res => setData(res.data))//setData(res.data.items)
         .catch(err => console.log(err))
       //console.log(bookdata);
-      localStorage.removeItem("searchValue");
+      //localStorage.removeItem("searchValue");
     } else if (searchValue && searchValue == "") {
       console.log("no success")
       axios.get('http://localhost:8080/books/getAll')
         .then(res => setData(res.data))//setData(res.data.items)
         .catch(err => console.log(err))
-      localStorage.removeItem("searchValue");
-    } else {
+      //localStorage.removeItem("searchValue");
+    } else if (!searchValue) {
       axios.get('http://localhost:8080/books/getAll')
         .then(res => setData(res.data))//setData(res.data.items)
         .catch(err => console.log(err))

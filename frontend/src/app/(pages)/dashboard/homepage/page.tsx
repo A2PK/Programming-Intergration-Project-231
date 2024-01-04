@@ -11,7 +11,7 @@ export default function Homepage() {
   useEffect(() => {
     // Retrieve search value from localStorage
     const searchValue = localStorage.getItem('searchValue');
-
+    
     // Filter products based on search value
     if (searchValue && searchValue!="") {      
         redirect("./search?value="+searchValue);
