@@ -11,37 +11,30 @@ const SearchPage = ({
   searchParams,
 }: {
   searchParams: {
-      value: string;
+    value: string;
   };
 }) => {
   const [bookdata, setData] = useState([]);
   useEffect(() => {
-    // Retrieve search value from localStorage
     let searchValue = localStorage.getItem('searchValue');
     if (searchValue && searchValue != "") {
       localStorage.removeItem("searchValue");
       redirect("./search?value=" + searchValue);
-  } else {
+    } else {
       console.log("no success")
-  }
-    if(searchParams && searchParams.value != "")
-    {
+    }
+    if (searchParams && searchParams.value != "") {
       searchValue = searchParams.value;
     }
-    // Filter products based on search value
     if (searchValue && searchValue != "") {
-      //redirect("./search");
       axios.get('http://localhost:8080/books/search/' + searchValue)
-        .then(res => setData(res.data))//setData(res.data.items)
+        .then(res => setData(res.data))
         .catch(err => console.log(err))
-      //console.log(bookdata);
-      //localStorage.removeItem("searchValue");
     } else if (searchValue && searchValue == "") {
       console.log("no success")
       axios.get('http://localhost:8080/books/getAll')
         .then(res => setData(res.data))//setData(res.data.items)
         .catch(err => console.log(err))
-      //localStorage.removeItem("searchValue");
     } else if (!searchValue) {
       axios.get('http://localhost:8080/books/getAll')
         .then(res => setData(res.data))//setData(res.data.items)
@@ -61,7 +54,6 @@ const SearchPage = ({
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
   const totalPages = Math.ceil(products.length / productsPerPage);
-
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
   const currentProducts = products.slice(startIndex, endIndex);
@@ -97,7 +89,7 @@ const SearchPage = ({
                 alignItems: 'flex-start',
                 height: '17.6em',
                 display: 'flex',
-                overflow: 'hidden',  // Add overflow hidden to hide any overflowing content
+                overflow: 'hidden',
               }}>
                 <img
                   src={product.image}

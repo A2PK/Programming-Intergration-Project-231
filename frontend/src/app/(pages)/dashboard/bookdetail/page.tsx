@@ -24,11 +24,7 @@ export default function Bookdetail({
     const [shownNotAvailable, setShownNotAvailable] = useState(false);
     const [bookingsuccess, setBookingsuccess] = useState(false);
     const productId = searchParams.productid;
-    // if (productId) {
-    //     console.log(productId);
-    // } else {
-    //     console.error('productid is not defined');
-    // }
+    
     const fetchData = () => {
         const data = getBook(productId)
             .then((data) => {
@@ -53,7 +49,6 @@ export default function Bookdetail({
 
     const handleBorrowClick = () => {
         if (book && !book.condition) {
-            // If the book is not available, show a message
             setShownNotAvailable(true);
         } else {
             const modalElement = document.getElementById('BookReserveModal');
@@ -70,8 +65,6 @@ export default function Bookdetail({
         }
     };
     // function handle modal
-    const [dateError, setDateError] = useState('');
-
     const handleConfirm = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();   
             try {
@@ -88,8 +81,6 @@ export default function Bookdetail({
                 }
             }
             setBookingsuccess(true);
-            // Your logic for confirming the reservation...
-            // Add any additional logic you want to execute after confirming the reservation
     };
 
 
@@ -104,7 +95,6 @@ export default function Bookdetail({
                     <div className="col-md-6 my-2 d-flex justify-content-center align-items-center" style={{ paddingRight: '25px', borderRight: '0.3px solid #333' }}>
                         <button className="d-block rounded img-fluid border-0 mx-2">
                             <img
-                                // src={book ? book1 : "https://i.ibb.co/yRsQjBX/extend-Sequence.png"}
                                 src={book ? book.image_url : "https://i.ibb.co/yRsQjBX/extend-Sequence.png"}
                                 alt="book1"
                                 width="100%"
@@ -115,11 +105,6 @@ export default function Bookdetail({
                     </div>
                     <div className="col-md-6 px-3">
                         <p className="fw-semibold fs-2">{book ? book.name : "NaN"}</p>
-                        {/* <div className="row d-flex">
-                        <p className="col-md-3">Available copies: <b>15</b></p>
-                        <p className="mx-md-3 col-md-3">Copies In Library: <b>20</b></p>
-                        <p className="col-md-3">Copies taken-out: <b>5</b></p>
-                    </div> */}
                         <p>Genre: <b>{book ? book.genre : "NaN"}</b></p>
                         <p>Author: <b>{book ? book.author : "NaN"}</b></p>
                         <p>Condition: <b>{book ? (book.condition ? "Available" : "No available") : "NaN"}</b></p>
@@ -198,7 +183,6 @@ export default function Bookdetail({
                                             <div className="form-group">
                                                 <button className="btn btn-primary" type="submit" name="patientcancel">Confirm</button>
                                                 <button type="button" className="btn btn-danger mx-2" data-bs-dismiss="modal">Close</button>
-                                                {/* {dateError && <p style={{ color: 'red' }}>{dateError}</p>} */}
                                             </div>
                                         </form>
                                     </div>

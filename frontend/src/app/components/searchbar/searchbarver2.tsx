@@ -10,18 +10,11 @@ const SearchBar = () => {
 const [search,setSearch] = useState("");
 const [bookdata,setData] = useState([]);
 const handleSearchChange = (newValue: string) => {
-  // Perform the first action, e.g., updating the state
   setSearch(newValue);
   localStorage.setItem("searchValue", search);
 };
 const searchBook=(evt: any)=>{
-    //evt.preventDefault();
     localStorage.setItem("searchValue", search);
-    console.log("hello");
-    // axios.get('https://www.googleapis.com/books/v1/volumes?q='+search+'&key=AIzaSyB69Lj2TehCjvA2pen9eDrv_jEylQZEXNc')
-    //   .then(res=>setData(res.data.items))
-    //   .catch(err=>console.log(err))
-    // <Link ></Link>
 }
   return (
     <Navbar
@@ -30,7 +23,6 @@ const searchBook=(evt: any)=>{
       variant="dark"
       expand="md"
       className="border-bottom border-secondary-blue"
-      //style={{ height: '64px' }}
     >
       <div className='col-md-1'></div>
       <div className='container text-light col-md-4 fs-2 fst-italic fw-bold' style={{ fontFamily: 'Inria Serif, serif' }}>
@@ -57,7 +49,6 @@ const searchBook=(evt: any)=>{
       </div>
       <br></br>
       <div className='col-md-3'></div>
-      {/* style={{ width: '350px' }} */}
     </Navbar>
   );
 };
