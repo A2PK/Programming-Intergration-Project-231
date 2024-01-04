@@ -6,6 +6,7 @@ import Image from "next/image";
 import "bootstrap/dist/js/bootstrap.min.js";
 import Link from "next/link";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function NavBar(): React.JSX.Element {
   const id = localStorage.getItem("userID");
