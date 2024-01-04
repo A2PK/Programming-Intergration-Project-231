@@ -21,6 +21,7 @@ export default function Bookdetail({
     //function to get the book by id
     const [book, setBook] = useState<Book>();
     const [today, setToday] = useState('');
+    const [shownNotAvailable, setShownNotAvailable] = useState(false);
     const productId = searchParams.productid;
     // if (productId) {
     //     console.log(productId);
@@ -50,16 +51,21 @@ export default function Bookdetail({
     }, []);
 
     const handleBorrowClick = () => {
-        const modalElement = document.getElementById('BookReserveModal');
-        if (modalElement) {
-            const currentDate = new Date();
-            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-            const day = currentDate.getDate().toString().padStart(2, '0');
-            const year = currentDate.getFullYear();
-            const formattedDate = `${year}-${month}-${day}`; // Format as YYYY-MM-DD for input type="date"
-            setToday(formattedDate);
-            const myModal = new Modal(modalElement);
-            myModal.show();
+        if (book && !book.condition) {
+            // If the book is not available, show a message
+            setShownNotAvailable(true);
+        } else {
+            const modalElement = document.getElementById('BookReserveModal');
+            if (modalElement) {
+                const currentDate = new Date();
+                const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                const day = currentDate.getDate().toString().padStart(2, '0');
+                const year = currentDate.getFullYear();
+                const formattedDate = `${year}-${month}-${day}`; // Format as YYYY-MM-DD for input type="date"
+                setToday(formattedDate);
+                const myModal = new Modal(modalElement);
+                myModal.show();
+            }
         }
     };
     // function handle modal
@@ -152,6 +158,11 @@ export default function Bookdetail({
                                 <button className="btn btn-info rounded-5 text-dark">Preview</button>
                             </div>
                         </div>
+                        {shownNotAvailable && (
+                            <div className="alert alert-danger" role="alert">
+                                This book is not available.
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="modal" id="BookReserveModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -195,7 +206,7 @@ export default function Bookdetail({
                                             <div className="form-group">
                                                 <button className="btn btn-primary" type="submit" name="patientcancel">Confirm</button>
                                                 <button type="button" className="btn btn-danger mx-2" data-bs-dismiss="modal">Close</button>
-                                                {dateError && <p style={{ color: 'red' }}>{dateError}</p>}
+                                                {/* {dateError && <p style={{ color: 'red' }}>{dateError}</p>} */}
                                             </div>
                                         </form>
                                     </div>
