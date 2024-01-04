@@ -5,8 +5,17 @@ import logo from "/public/Logo_BK.png";
 import Image from "next/image";
 import "bootstrap/dist/js/bootstrap.min.js";
 import Link from "next/link";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function NavBar(): React.JSX.Element {
+  const id = localStorage.getItem("userID");
+  const username = localStorage.getItem("username");
+
+  const handleLogout = () => {
+    localStorage.removeItem("userID");
+    localStorage.removeItem("username");
+  };
+
   return (
     <nav className="navbar navbar-expand-md bg-body-tertiary">
       <div className="container-fluid">
@@ -42,15 +51,33 @@ export default function NavBar(): React.JSX.Element {
             <Link className="nav-link" href="/dashboard/search">
               Books
             </Link>
-            <Link className="nav-link" href="/profile/account">
-              Account
-            </Link>
-            <Link className="nav-link" href="/auth/register">
-              Register
-            </Link>
-            <Link className="nav-link" href="/auth/login">
-              Login
-            </Link>
+            {id ? (
+              <>
+                <Link className="nav-link" href="/profile/account">
+                  Account
+                </Link>
+                <Link
+                  className="nav-link"
+                  onClick={handleLogout}
+                  aria-disabled="true"
+                  href="/"
+                >
+                  Logout
+                </Link>
+                <div className="navbar-text text-info-emphasis user-select-none">
+                  <i className="bi bi-person-circle"></i> {username}
+                </div>
+              </>
+            ) : (
+              <>
+                <Link className="nav-link" href="/auth/register">
+                  Register
+                </Link>
+                <Link className="nav-link" href="/auth/login">
+                  Login
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

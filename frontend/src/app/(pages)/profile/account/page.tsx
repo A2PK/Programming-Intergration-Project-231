@@ -6,15 +6,16 @@ import { useEffect, useState } from "react";
 
 export default function AccountPage() {
   const [user, setUser] = useState<User>();
+  const id = localStorage.getItem("userID");
 
   const fetchData = async () => {
-    const data = await getUser();
+    const data = await getUser(id);
     setUser(data);
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  });
 
   return (
     <>
