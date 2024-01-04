@@ -3,13 +3,13 @@ export default function ProfileSidebar(): React.JSX.Element {
   return (
     <nav className="nav flex-column py-3 shadow-sm rounded-4">
       <Link className="nav-link text-black" href="account">
-        Account
+        <i className="bi bi-person-bounding-box"></i> Account
       </Link>
       <Link className="nav-link text-black" href="reservation">
-        Reservations
+        <i className="bi bi-bookmark-plus"></i> Reservations
       </Link>
       <Link className="nav-link text-black" href="borrow">
-        Borrow
+        <i className="bi bi-journal"></i> Borrow
       </Link>
     </nav>
   );
