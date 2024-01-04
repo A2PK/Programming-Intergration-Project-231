@@ -118,7 +118,7 @@ const SearchPage = ({
                   query: {
                     productid: `${product.trueID}`
                   },
-                }} className="btn btn-primary">View detail</Link>
+                }} className="btn btn-outline-secondary">View detail</Link>
               </div>
             </div>
 
