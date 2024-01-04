@@ -22,6 +22,7 @@ export default function Bookdetail({
     const [book, setBook] = useState<Book>();
     const [today, setToday] = useState('');
     const [shownNotAvailable, setShownNotAvailable] = useState(false);
+    const [bookingsuccess, setBookingsuccess] = useState(false);
     const productId = searchParams.productid;
     // if (productId) {
     //     console.log(productId);
@@ -72,22 +73,7 @@ export default function Bookdetail({
     const [dateError, setDateError] = useState('');
 
     const handleConfirm = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        const dateInput = document.getElementById('bookDate') as HTMLInputElement;
-        const selectedDate = dateInput.value;
-
-        if (!selectedDate) {
-            setDateError('Please choose a date.');
-            return;
-        }
-
-        const currentDate = new Date().setHours(0, 0, 0, 0); // Set time to midnight
-        const inputDate = new Date(selectedDate).setHours(0, 0, 0, 0);
-
-        if (inputDate < currentDate) {
-            setDateError('Selected date cannot be in the past.');
-        } else {
+        event.preventDefault();   
             try {
                 const response = await axios.post('http://localhost:8080/books/reserve', {
                     userID: "ddd",
@@ -101,9 +87,9 @@ export default function Bookdetail({
                     console.error('Unknown error:', error);
                 }
             }
+            setBookingsuccess(true);
             // Your logic for confirming the reservation...
             // Add any additional logic you want to execute after confirming the reservation
-        }
     };
 
 
@@ -151,7 +137,7 @@ export default function Bookdetail({
                             </b>
                         </p>
                         <p>Pages: <b>{book ? book.totalpages : 0}</b></p>
-                        <div className="my-5 row">
+                        <div className="mt-5 mb-3 row">
                             <div className="col-md-2"><p>Description:</p></div>
                             <div className="col-md-9"><p>{book ? book.description : "NaN"}</p>
                                 <button onClick={handleBorrowClick} className="btn btn-dark rounded-5 my-2">Borrow Now </button>&nbsp;&nbsp;&nbsp;
@@ -161,6 +147,12 @@ export default function Bookdetail({
                         {shownNotAvailable && (
                             <div className="alert alert-danger" role="alert">
                                 This book is not available.
+                            </div>
+                        )}
+                        {bookingsuccess && (
+                            <div className="alert alert-success" role="alert">
+                                You've just reserved this book successfully.<br></br>
+                                <b><u>Note</u></b>: Remember to take the book <b>within 3 days</b> at the library. Otherwise, you will be fined by caution.
                             </div>
                         )}
                     </div>
