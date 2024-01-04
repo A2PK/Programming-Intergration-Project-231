@@ -7,6 +7,7 @@ import book4 from "/public/psy.jpg";
 import SearchBar from "@/app/components/searchbar/searchbarver2";
 import React, { useState, useEffect } from 'react';
 import { redirect } from "next/navigation";
+import Link from "next/link";
 export default function Homepage() {
   useEffect(() => {
     // Retrieve search value from localStorage
@@ -28,8 +29,13 @@ export default function Homepage() {
           <p className="fs-1 fw-semibold text-danger-emphasis">The Psychology of Money</p>
           <p className="fs-5 fw-light fst-italic" style={{ width: '85%' }}>The Psychology of Money is a book written by Morgan Housel that explores the psychology behind the way people approach and think about money.
             The book discusses various topics such as how money affects happiness.</p><br></br>
-          <button className="btn btn-dark rounded-5 fs-5 my-2">Read More </button>&nbsp;&nbsp;&nbsp;
-          <button className="btn btn-info rounded-5 fs-5 text-dark">Borrow Now</button>
+          <Link href={"./search"}><button className="btn btn-dark rounded-5 fs-5 my-2">Read More </button></Link>&nbsp;&nbsp;&nbsp;
+          <Link href={{
+                  pathname: `/dashboard/bookdetail`,
+                  query: {
+                    productid: "65967684e79890fdef0704c0"
+                  },
+                }}><button className="btn btn-info rounded-5 fs-5 text-dark">Borrow Now</button></Link>
         </div>
         <div>
           <br></br>
