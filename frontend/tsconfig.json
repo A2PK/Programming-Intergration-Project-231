@@ -7,6 +7,7 @@
       "esnext"
     ],
     "allowJs": true,
+    "types": ["jquery"],
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,

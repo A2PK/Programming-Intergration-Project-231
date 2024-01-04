@@ -4,10 +4,24 @@ import book1 from "/public/book3.jpg";
 import book2 from "/public/book2.jpeg";
 import book3 from "/public/book1.webp";
 import book4 from "/public/psy.jpg";
+import SearchBar from "@/app/components/searchbar/searchbarver2";
+import React, { useState, useEffect } from 'react';
 import { redirect } from "next/navigation";
 export default function Homepage() {
-  return (
+  useEffect(() => {
+    // Retrieve search value from localStorage
+    const searchValue = localStorage.getItem('searchValue');
 
+    // Filter products based on search value
+    if (searchValue && searchValue!="") {      
+        redirect("./search?value="+searchValue);
+    } else {
+      console.log("no success")
+    }
+  }, []);
+  return (
+    <div>
+    <SearchBar />
     <div className="d-sm-float d-md-flex p-md-5 mx-md-5 my-md-3 my-5 mx-3 ">
       <div style={{ fontFamily: 'Inria Serif, serif' }} className="col-md-6 col-12">
         <div>
@@ -77,6 +91,7 @@ export default function Homepage() {
               <p className="text-center fst-italic fw-semibold fs-4">No 1. The Psychology of Money</p>
               <p className="text-center fw-normal fs-5">Author: Morgan Housel</p>
       </div>
+    </div>
     </div>
   )
 }

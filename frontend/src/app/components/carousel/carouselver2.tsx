@@ -11,19 +11,20 @@ import Script from 'next/script'
 import "./carousel.css"
 const Carousel = () => {
     useEffect(() => {
-        <Script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" />
+        // <Script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" />
         if (window.matchMedia("(min-width:576px)").matches) {
-            var carouselWidth = $('.carousel-inner')[0].scrollWidth;
-            var cardWidth = $('.carousel-item').width();
-            var scrollPosition = 0;
-
+            const carouselWidth = $('.carousel-inner')[0].scrollWidth;
+            const cardWidth = $('.carousel-item').width();
+            let scrollPosition = 0;
+        
             $('.carousel-control-next').on('click', function () {
-                if (scrollPosition < (carouselWidth - ((cardWidth as number) * 4))) {
+                if (scrollPosition < (carouselWidth - (cardWidth as number) * 4)) {
                     console.log('next');
                     scrollPosition = scrollPosition + (cardWidth as number);
                     $('.carousel-inner').animate({ scrollLeft: scrollPosition }, 600);
                 }
             });
+        
             $('.carousel-control-prev').on('click', function () {
                 if (scrollPosition > 0) {
                     console.log('prev');
@@ -46,8 +47,8 @@ const Carousel = () => {
                     <div className="carousel-item active">
                         <div className="card col">
                             <div className="img-wrapper">
-                                <Image
-                                    src={logo}
+                                <img
+                                    src="https://i.ibb.co/GC44wSp/gamethrone.jpg"
                                     alt="book3"
                                 />
                             </div>

@@ -6,10 +6,10 @@ import dynamic from "next/dynamic";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Script from 'next/script'
 import Link from "next/link";
-const DynamicBootstrap = dynamic(
-  () => require('bootstrap/dist/js/bootstrap.min.js'),
-  { ssr: false }
-);
+// const DynamicBootstrap = dynamic(
+//   () => require('bootstrap/dist/js/bootstrap.min.js'),
+//   { ssr: false }
+// );
 const NavBar: React.FC = () => {
   return (
     <nav className="navbar navbar-expand-md bg-body-tertiary">
@@ -48,9 +48,9 @@ const NavBar: React.FC = () => {
             {/* <a className="nav-link" href="/dashboard/search">
               Books
             </a> */}
-            <a className="nav-link" href="#">
+            <Link className="nav-link" href="/profile/account">
               Account
-            </a>
+            </Link>
             <Link href={"/auth/register"} className="nav-link"> Register </Link>
             {/* <a className="nav-link" href="/auth/register">
               Register

@@ -15,7 +15,7 @@ export default function DashboardLayout({
   return (
     <>
       <NavBar />
-      <SearchBar />
+      {/* <SearchBar /> */}
       {children}
       {/* <Carousel/> */}
       <AppFooter />
