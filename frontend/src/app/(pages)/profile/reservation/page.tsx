@@ -3,9 +3,11 @@ import { ReserveHeader, ReserveRow } from "./func";
 import { useState, useEffect } from "react";
 import { UserActivity } from "@/app/models/User";
 import { getReservations } from "@/app/api/user_api";
+import { Loading } from "@/app/components/loading/loading";
 
 export default function ReservationPage() {
   const [reservedBooks, setReservedBooks] = useState<UserActivity[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const id = localStorage.getItem("userID");
 
   useEffect(() => {
@@ -19,10 +21,14 @@ export default function ReservationPage() {
       } catch (error) {
         console.log(error);
       }
+      setIsLoading(false);
     };
-
     fetchData();
   }, [id]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

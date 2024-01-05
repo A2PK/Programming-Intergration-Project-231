@@ -1,11 +1,13 @@
 "use client";
 import { PersonalInfo } from "./func";
 import { getUser } from "@/app/api/user_api";
+import { Loading } from "@/app/components/loading/loading";
 import { User } from "@/app/models/User";
 import { useEffect, useState } from "react";
 
 export default function AccountPage() {
   const [user, setUser] = useState<User>();
+  const [isLoading, setIsLoading] = useState(true);
   const id = localStorage.getItem("userID");
 
   useEffect(() => {
@@ -19,9 +21,14 @@ export default function AccountPage() {
       } catch (error) {
         console.log(error);
       }
+      setIsLoading(false);
     };
     fetchData();
   }, [id]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <>

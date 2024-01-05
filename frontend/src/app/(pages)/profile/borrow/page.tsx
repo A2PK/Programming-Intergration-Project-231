@@ -3,10 +3,12 @@ import { BorrowHeader, BorrowRow, HistoryHeader, HistoryRow } from "./func";
 import { useState, useEffect } from "react";
 import { User, UserActivity } from "@/app/models/User";
 import { getBorrows } from "@/app/api/user_api";
+import { Loading } from "@/app/components/loading/loading";
 
 export default function BorrowPage() {
   const [borrows, setBorrows] = useState<UserActivity[]>([]);
   const [history, setHistory] = useState<UserActivity[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const id = localStorage.getItem("userID");
 
   useEffect(() => {
@@ -21,9 +23,15 @@ export default function BorrowPage() {
       } catch (error) {
         console.log(error);
       }
+      setIsLoading(false);
     };
     fetchData();
   }, [id]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <div className="mb-3">
