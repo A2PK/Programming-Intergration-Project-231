@@ -8,21 +8,20 @@ export default function AccountPage() {
   const [user, setUser] = useState<User>();
   const id = localStorage.getItem("userID");
 
-  const fetchData = async () => {
-    try {
-      if (id === null) {
-        throw new Error("No userID in localStorage");
-      }
-      const res = await getUser(id);
-      setUser(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (id === null) {
+          throw new Error("No userID in localStorage");
+        }
+        const res = await getUser(id);
+        setUser(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchData();
-  }, []);
+  }, [id]);
 
   return (
     <>

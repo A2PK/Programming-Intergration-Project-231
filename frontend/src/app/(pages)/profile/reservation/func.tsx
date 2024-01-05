@@ -1,10 +1,11 @@
 import { UserActivity } from "@/app/models/User";
+import { parseGoTime } from "@/app/api/time";
 export function ReserveRow({ no, act }: { no: number; act: UserActivity }) {
   return (
     <div className="row mb-3">
       <div className="col-1">{no}</div>
       <div className="col-3">{act.bookName}</div>
-      <div className="col-4">{act.endDate}</div>
+      <div className="col-4">{parseGoTime(act.endDate)}</div>
       <div className="col-2">{act.location}</div>
       <div className="col-2">
         <button className="btn btn-outline-danger btn-sm">Cancel</button>
