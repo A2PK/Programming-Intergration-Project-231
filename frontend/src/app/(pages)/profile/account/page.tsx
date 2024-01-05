@@ -9,24 +9,26 @@ export default function AccountPage() {
   const id = localStorage.getItem("userID");
 
   const fetchData = async () => {
-    const data = await getUser(id);
-    setUser(data);
+    try {
+      if (id === null) {
+        throw new Error("No userID in localStorage");
+      }
+      const res = await getUser(id);
+      setUser(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  });
+  }, []);
 
   return (
     <>
       <h2>Personal Information</h2>
       <hr />
-      <PersonalInfo
-        name={user ? user.name : ""}
-        ssn={user ? user.ssn : ""}
-        phone={user ? user.phonenum : ""}
-        age={user ? user.age : null}
-      />
+      {user ? <PersonalInfo user={user} /> : <></>}
     </>
   );
 }

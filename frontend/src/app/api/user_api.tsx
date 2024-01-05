@@ -1,22 +1,32 @@
 import axios from "axios";
-import { User } from "../models/User";
+import { User, UserActivity } from "../models/User";
 
-const getUser = async (id: string | null) => {
-  try {
-    if (id === null) {
-      throw new Error("id is null");
-    }
-    const { data } = await axios.get<User>(
-      "http://localhost:8080/users/" + id,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
+const getUser = async (id: string) => {
+  return await axios.get<User>("http://localhost:8080/users/" + id, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
-export { getUser };
+
+const getBorrows = async (id: string) => {
+  return await axios.get<UserActivity[]>(
+    "http://localhost:8080/users/" + id + "/borrows",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+const getReservations = async (id: string) => {
+  return await axios.get<UserActivity[]>(
+    "http://localhost:8080/users/" + id + "/reservations",
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
+export { getUser, getBorrows, getReservations };

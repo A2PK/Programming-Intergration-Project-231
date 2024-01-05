@@ -1,16 +1,11 @@
-interface Props {
-  no: number;
-  bname: string;
-  pickdate: string;
-  picklocation: string;
-}
-export function ReserveRow(props: Props) {
+import { UserActivity } from "@/app/models/User";
+export function ReserveRow({ no, act }: { no: number; act: UserActivity }) {
   return (
     <div className="row mb-3">
-      <div className="col-1">{props.no}</div>
-      <div className="col-3">{props.bname}</div>
-      <div className="col-4">{props.pickdate}</div>
-      <div className="col-2">{props.picklocation}</div>
+      <div className="col-1">{no}</div>
+      <div className="col-3">{act.bookName}</div>
+      <div className="col-4">{act.endDate}</div>
+      <div className="col-2">{act.location}</div>
       <div className="col-2">
         <button className="btn btn-outline-danger btn-sm">Cancel</button>
       </div>
@@ -23,7 +18,7 @@ export function ReserveHeader() {
     <div className="row mb-3 fw-bold">
       <div className="col-1">No.</div>
       <div className="col-3">Book Name</div>
-      <div className="col-4">Pickup Date</div>
+      <div className="col-4">Dued Date</div>
       <div className="col-2">Location</div>
       <div className="col-2"></div>
     </div>
