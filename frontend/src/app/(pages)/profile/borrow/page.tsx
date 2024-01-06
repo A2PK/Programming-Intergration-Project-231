@@ -1,25 +1,57 @@
 "use client";
-import { BorrowHeader, BorrowRow } from "./func";
+import { BorrowHeader, BorrowRow, HistoryHeader, HistoryRow } from "./func";
 import { useState, useEffect } from "react";
-import { Book } from "@/app/models/Book";
+import { User, UserActivity } from "@/app/models/User";
+import { getBorrows } from "@/app/api/user_api";
+import { Loading } from "@/app/components/loading/loading";
 
 export default function BorrowPage() {
-  // const [borrowedBooks, setBorrowedBooks] = useState<Book[]>([]);
+  const [borrows, setBorrows] = useState<UserActivity[]>([]);
+  const [history, setHistory] = useState<UserActivity[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const id = localStorage.getItem("userID");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (id === null) {
+          throw new Error("No userID in localStorage");
+        }
+        const res = await getBorrows(id);
+        const borrowedList: UserActivity[] = res.data.borrowedList;
+        const borrowingList: UserActivity[] = res.data.borrowingList;
+
+        setBorrows(borrowedList);
+        setHistory(borrowingList);
+      } catch (error) {
+        console.log(error);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [id]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <div className="mb-3">
-        <h2>Borrowed Books</h2>
+        <h2>Current Borrowings</h2>
         <hr />
         <BorrowHeader />
-        {/* {borrowedBooks.map((book, index) => (
-          <BorrowRow key={index} no={index + 1} bname={book.name} duedate={book.returndate} />
-        ))} */}
-        <BorrowRow no={1} bname="Computer Networks" duedate="30-12-2023" />
-        <BorrowRow no={2} bname="Database Systems" duedate="31-12-2023" />
+        {borrows.map((book, index) => (
+          <BorrowRow no={index + 1} act={book} key={index} />
+        ))}
       </div>
       <div>
         <h2>Borrow History</h2>
         <hr />
+        <HistoryHeader />
+        {history.map((book, index) => (
+          <HistoryRow no={index + 1} act={book} key={index} />
+        ))}
       </div>
     </>
   );

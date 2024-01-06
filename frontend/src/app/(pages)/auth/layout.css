@@ -1,0 +1,14 @@
+.decorator {
+  width: 100vw;
+  height: 2vh;
+
+  background-color: #c4986f;
+  /* background-position: center; */
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.authBody {
+  height: 96vh;
+  background-color: #faf7f2;
+}

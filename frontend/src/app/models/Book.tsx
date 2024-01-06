@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
+
 export interface Book {
-  id: string;
+  id: ObjectId;
   isbn: string;
   name: string;
   genre: string;
@@ -7,13 +9,12 @@ export interface Book {
   author: string;
   publisher: string;
   publishdate: Date;
-  totalpages: number;
+  totalpages: Number;
   condition: boolean;
-  availability: number;
+  availability: Number;
   location: string;
   image_url: string;
   startdate: Date;
   enddate: Date;
   extendeddate: Date;
 }
-// availiblity enum (0,1,2,3) 0:available 1:unavailable 2:reserved 3:borrowed

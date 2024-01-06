@@ -1,21 +1,29 @@
 import axios from "axios";
-import { User } from "../models/User";
+const domain =
+  process.env.NEXT_PUBLIC_PROTO +
+  process.env.NEXT_PUBLIC_HOST +
+  process.env.NEXT_PUBLIC_PORT;
 
-const getUser = async (): Promise<User> => {
-  const id = "65911559f205ce273ef0a8f6";
-
-  return axios
-    .get("http://localhost:8080/users/" + id, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const getUser = async (id: string) => {
+  return await axios.get(domain + "/users/" + id, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
-export { getUser };
+
+const getBorrows = async (id: string) => {
+  return await axios.get(domain + "/users/" + id + "/borrows", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+const getReservations = async (id: string) => {
+  return await axios.get(domain + "/users/" + id + "/reservations", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+export { getUser, getBorrows, getReservations };

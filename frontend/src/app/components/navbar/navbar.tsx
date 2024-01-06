@@ -1,21 +1,26 @@
 "use client";
+
 import "./navbar.css";
 import logo from "/public/Logo_BK.png";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Script from 'next/script'
+import "bootstrap/dist/js/bootstrap.min.js";
 import Link from "next/link";
-// const DynamicBootstrap = dynamic(
-//   () => require('bootstrap/dist/js/bootstrap.min.js'),
-//   { ssr: false }
-// );
-const NavBar: React.FC = () => {
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+export default function NavBar(): React.JSX.Element {
+  const id = localStorage.getItem("userID");
+  const username = localStorage.getItem("username");
+
+  const handleLogout = () => {
+    localStorage.removeItem("userID");
+    localStorage.removeItem("username");
+  };
+
   return (
     <nav className="navbar navbar-expand-md bg-body-tertiary">
       <div className="container-fluid">
-      <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"/>
-        <Link className="navbar-brand" href={"/dashboard/homepage"}>
+        <Link className="navbar-brand" href="/dashboard/homepage">
           <div className="row align-items-center justify-content-center ps-3">
             <div className="col p-0">
               <Image
@@ -44,25 +49,39 @@ const NavBar: React.FC = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <div className="navbar-nav ms-auto">
-            <Link href={"/dashboard/search"} className="nav-link"> Books </Link>
-            {/* <a className="nav-link" href="/dashboard/search">
+            <Link className="nav-link" href="/dashboard/search">
               Books
-            </a> */}
-            <Link className="nav-link" href="/profile/account">
-              Account
             </Link>
-            <Link href={"/auth/register"} className="nav-link"> Register </Link>
-            {/* <a className="nav-link" href="/auth/register">
-              Register
-            </a> */}
-            <Link href={"/auth/login"} className="nav-link"> Login </Link>
-            {/* <a className="nav-link" href="/auth/login">Login</a> */}
+            {id ? (
+              <>
+                <Link className="nav-link" href="/profile/account">
+                  Account
+                </Link>
+                <Link
+                  className="nav-link"
+                  onClick={handleLogout}
+                  aria-disabled="true"
+                  href="/"
+                >
+                  Logout
+                </Link>
+                <div className="navbar-text text-info-emphasis user-select-none">
+                  <i className="bi bi-person-circle"></i> {username}
+                </div>
+              </>
+            ) : (
+              <>
+                <Link className="nav-link" href="/auth/login">
+                  Login
+                </Link>
+                <Link className="nav-link" href="/auth/register">
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
     </nav>
-    
   );
-};
-
-export default NavBar;
+}
