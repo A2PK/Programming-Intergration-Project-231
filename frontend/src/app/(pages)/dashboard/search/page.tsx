@@ -6,6 +6,7 @@ import Carousel from "@/app/components/carousel/carouselver2";
 import SearchBar from "@/app/components/searchbar/searchbarver2";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import "./search.css"
 import { redirect } from "next/navigation";
 const SearchPage = ({
   searchParams,
@@ -83,14 +84,7 @@ const SearchPage = ({
         <div className="row row-cols-1 row-cols-sm-5 justify-content-center gap-1">
           {currentProducts.map((product) => (
             <div key={product.id} className="card col mb-4 p-0 mx-2">
-              <div style={{
-                maxWidth: '100%',
-                justifyContent: 'center',
-                alignItems: 'flex-start',
-                height: '17.6em',
-                display: 'flex',
-                overflow: 'hidden',
-              }}>
+              <div className="myDiv" >
                 <img
                   src={product.image}
                   alt={product.title}

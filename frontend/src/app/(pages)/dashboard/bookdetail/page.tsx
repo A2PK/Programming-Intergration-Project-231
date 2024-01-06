@@ -24,7 +24,7 @@ export default function Bookdetail({
     const [shownNotAvailable, setShownNotAvailable] = useState(false);
     const [bookingsuccess, setBookingsuccess] = useState(false);
     const productId = searchParams.productid;
-    
+
     const fetchData = () => {
         const data = getBook(productId)
             .then((data) => {
@@ -66,21 +66,21 @@ export default function Bookdetail({
     };
     // function handle modal
     const handleConfirm = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();   
-            try {
-                const response = await axios.post('http://localhost:8080/books/reserve', {
-                    userID: "ddd",
-                    bookID: productId, //string
-                });
-                console.log('Reservation confirmed!', response.data);
-            } catch (error: unknown) {
-                if (error instanceof Error) {
-                    console.error('Error confirming reservation:', error.message);
-                } else {
-                    console.error('Unknown error:', error);
-                }
+        event.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:8080/books/reserve', {
+                userID: "ddd",
+                bookID: productId, //string
+            });
+            console.log('Reservation confirmed!', response.data);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Error confirming reservation:', error.message);
+            } else {
+                console.error('Unknown error:', error);
             }
-            setBookingsuccess(true);
+        }
+        setBookingsuccess(true);
     };
 
 
@@ -89,41 +89,42 @@ export default function Bookdetail({
             <SearchBar />
             <div style={{ fontFamily: 'Inria Serif, serif' }} className="mx-4">
                 <div>
-                    <p className="fs-1 fw-semibold mt-5 mb-4 mx-2 text-danger-emphasis">Book Detail Information</p>
+                    <p className="fs-1 fw-semibold mt-5 mb-4 mx-2 text-danger-emphasis text-center"></p>
+                    {/* Book detail infor */}
                 </div>
                 <div className="row">
                     <div className="col-md-6 my-2 d-flex justify-content-center align-items-center" style={{ paddingRight: '25px', borderRight: '0.3px solid #333' }}>
-                        <button className="d-block rounded img-fluid border-0 mx-2">
+                        <button className="d-block rounded img-fluid border-0 mx-2 bg-transparent border-0">
                             <img
                                 src={book ? book.image_url : "https://i.ibb.co/yRsQjBX/extend-Sequence.png"}
                                 alt="book1"
-                                width="100%"
+                                width="68%"
                                 // height="190"
                                 className="img-thumbnail"
                             />
                         </button>
                     </div>
-                    <div className="col-md-6 px-3">
+                    <div className="col-md-6 px-3 fs-6">
                         <p className="fw-semibold fs-2">{book ? book.name : "NaN"}</p>
-                        <p>Genre: <b>{book ? book.genre : "NaN"}</b></p>
-                        <p>Author: <b>{book ? book.author : "NaN"}</b></p>
-                        <p>Condition: <b>{book ? (book.condition ? "Available" : "No available") : "NaN"}</b></p>
-                        <p>Publisher: <b>{book ? book.publisher : "NaN"}</b></p>
+                        <p><b>Genre: &nbsp; </b> {book ? book.genre : "NaN"}</p>
+                        <p><b>Author: &nbsp; </b> {book ? book.author : "NaN"}</p>
+                        <p><b>Condition: &nbsp; </b> {book ? (book.condition ? "Available" : "No available") : "NaN"}</p>
+                        <p><b>Publisher: &nbsp; </b> {book ? book.publisher : "NaN"}</p>
                         <p>
-                            Publish date:{' '}
-                            <b>
-                                {book
-                                    ? (
-                                        book.publishdate instanceof Date
-                                            ? book.publishdate.toLocaleDateString('en-US')
-                                            : new Date(book.publishdate).toLocaleDateString('en-US')
-                                    )
-                                    : '02/04/2010'}
-                            </b>
+                            <b>Publish date:  &nbsp;</b>{' '}
+
+                            {book
+                                ? (
+                                    book.publishdate instanceof Date
+                                        ? book.publishdate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                                        : new Date(book.publishdate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                                )
+                                : '02/04/2010'}
+
                         </p>
-                        <p>Pages: <b>{book ? book.totalpages : 0}</b></p>
+                        <p><b>Pages:&nbsp;</b> {book ? book.totalpages : 0}</p>
                         <div className="mt-5 mb-3 row">
-                            <div className="col-md-2"><p>Description:</p></div>
+                            <div className="col-md-2"><p><b>Description:</b></p></div>
                             <div className="col-md-9"><p>{book ? book.description : "NaN"}</p>
                                 <button onClick={handleBorrowClick} className="btn btn-dark rounded-5 my-2">Borrow Now </button>&nbsp;&nbsp;&nbsp;
                                 <button className="btn btn-info rounded-5 text-dark">Preview</button>

@@ -36,43 +36,61 @@ export default function Homepage() {
           </div>
           <div>
             <br></br>
-            <p className="fs-1 fw-semibold mt-5 mb-5 text-danger-emphasis">Best Authors Book This Week</p>
+            <p className="fs-1 fw-semibold mt-5 mb-5 text-danger-emphasis">This week popular books</p>
             <div className="d-md-flex justify-between">
               <div className="mx-2 text-center">
-                <button className="d-inline-block rounded-3 border-0 ">
-                  <Image
-                    src={book1}
-                    alt="book1"
-                    width="200"
-                    height="190"
-                    className="rounded-3"
-                  />
-                </button>
-                <p className="text-md-center mt-1">Đắc Nhân Tâm</p>
+                <Link href={{
+                  pathname: `/dashboard/bookdetail`,
+                  query: {
+                    productid: "6596767de79890fdef0704bb"
+                  },
+                }}>
+                  <button className="d-inline-block rounded-3 border-0 ">
+                    <img
+                      src="https://i.ibb.co/dJ4sjtb/death-s-head.jpg"
+                      alt="book1"
+                      width="200"
+                      //height="400"
+                      className="rounded-3"
+                    />
+                  </button></Link>
+                <p className="text-md-center mt-1">Death's Head</p>
               </div>
               <div className="mx-2 text-center">
-                <button className="d-inline-block rounded-3 border-0 ">
-                  <Image
-                    src={book2}
-                    alt="book2"
-                    width="200"
-                    height="190"
-                    className="rounded-3"
-                  />
-                </button>
-                <p className="text-md-center mt-1">Thiên Tài Bên Trái, Kẻ Điên Bên Phải</p>
+                <Link href={{
+                  pathname: `/dashboard/bookdetail`,
+                  query: {
+                    productid: "65967681e79890fdef0704bd"
+                  },
+                }}>
+                  <button className="d-inline-block rounded-3 border-0 ">
+                    <img
+                      src="https://i.ibb.co/ZBGmk9Y/the-night-shift.jpg"
+                      alt="book1"
+                      width="200"
+                      //height="400"
+                      className="rounded-3"
+                    />
+                  </button></Link>
+                <p className="text-md-center mt-1">The Night Shift</p>
               </div>
               <div className="mx-2 text-center">
-                <button className="d-inline-block rounded-3 border-0 ">
-                  <Image
-                    src={book3}
-                    alt="book3"
-                    width="200"
-                    height="190"
-                    className="rounded-3"
-                  />
-                </button>
-                <p className="text-md-center mt-1">Tết Ở Làng Địa Ngục</p>
+                <Link href={{
+                  pathname: `/dashboard/bookdetail`,
+                  query: {
+                    productid: "6596749de79890fdef0704b9"
+                  },
+                }}>
+                  <button className="d-inline-block rounded-3 border-0 ">
+                    <img
+                      src="https://i.ibb.co/p0pjwf2/the-wager.jpg"
+                      alt="book1"
+                      width="200"
+                      //height="400"
+                      className="rounded-3"
+                    />
+                  </button></Link>
+                <p className="text-md-center mt-1">The Wager</p>
               </div>
             </div>
           </div>
@@ -83,12 +101,19 @@ export default function Homepage() {
         </div>
         <div className="d-block col-md-4 col-12" style={{ fontFamily: 'Inria Serif, serif' }}>
           <p className="fs-1 fw-semibold text-warning-emphasis text-center">Best Seller This Week</p>
-          <Image
-            src={book4}
-            alt="book3"
-            className="rounded-circle img-fluid mt-2 mb-3"
-            style={{ width: '100%' }}
-          />
+          <Link href={{
+            pathname: `/dashboard/bookdetail`,
+            query: {
+              productid: "65967684e79890fdef0704c0"
+            },
+          }}><button className="bg-transparent border-0">
+              <img
+                src="https://i.ibb.co/tsG85fj/the-psy.jpg"
+                alt="book3"
+                className="rounded-2 img-fluid mt-2 mb-3"
+                style={{ width: '100%' }}
+              />
+            </button></Link>
           <p className="text-center fst-italic fw-semibold fs-4">No 1. The Psychology of Money</p>
           <p className="text-center fw-normal fs-5">Author: Morgan Housel</p>
         </div>
