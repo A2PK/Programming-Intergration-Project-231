@@ -7,6 +7,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { User } from "@/app/models/User";
 
+const domain =
+  process.env.NEXT_PUBLIC_PROTO +
+  process.env.NEXT_PUBLIC_HOST +
+  process.env.NEXT_PUBLIC_PORT;
+
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +22,8 @@ export default function LoginPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/users/login", {
+      console.log(domain);
+      const res = await axios.post(domain + "/users/login", {
         username,
         password,
       });

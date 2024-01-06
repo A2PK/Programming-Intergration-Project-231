@@ -1,15 +1,18 @@
 import { UserActivity } from "@/app/models/User";
 import { parseGoTime } from "@/app/api/time";
 import axios from "axios";
+
+const domain =
+  process.env.NEXT_PUBLIC_PROTO +
+  process.env.NEXT_PUBLIC_HOST +
+  process.env.NEXT_PUBLIC_PORT;
+
 export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
   const handleExtend = async () => {
     const id = localStorage.getItem("userID");
     try {
       const res = await axios.post(
-        "http://localhost:8080/users/" +
-          id +
-          "/extendBorrow/" +
-          String(act.bookId)
+        domain + "/users/" + id + "/extendBorrow/" + String(act.bookId)
       );
       console.log(res.data.message);
     } catch (error) {
