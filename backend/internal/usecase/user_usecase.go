@@ -251,6 +251,8 @@ func (s *userUsecase) ExtendBorrowBook(ctx context.Context, userID string, bookI
 			} else {
 				return nil, entity.ERR_BOOK_RESERVE_ALREADY_EXTENDED
 			}
+		} else if i == len(user.BorrowingList)-1 {
+			return nil, entity.ERR_BOOK_NOT_BORROWED_BY_USER
 		}
 	}
 
