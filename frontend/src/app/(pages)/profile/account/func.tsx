@@ -7,6 +7,10 @@ export function PersonalInfo({ user }: { user: User }) {
         <div className="col">{user.name ? user.name : ""}</div>
       </div>
       <div className="row mb-4">
+        <div className="col-2 text-end">Username:</div>
+        <div className="col">{user.username ? user.username : ""}</div>
+      </div>
+      <div className="row mb-4">
         <div className="col-2 text-end">SSN:</div>
         <div className="col">{user.ssn ? user.ssn : ""}</div>
       </div>

@@ -17,7 +17,8 @@ export default function AccountPage() {
           throw new Error("No userID in localStorage");
         }
         const res = await getUser(id);
-        setUser(res.data);
+        const user: User = res.data;
+        setUser(user);
       } catch (error) {
         console.log(error);
       }

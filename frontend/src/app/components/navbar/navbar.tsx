@@ -71,11 +71,11 @@ export default function NavBar(): React.JSX.Element {
               </>
             ) : (
               <>
-                <Link className="nav-link" href="/auth/register">
-                  Register
-                </Link>
                 <Link className="nav-link" href="/auth/login">
                   Login
+                </Link>
+                <Link className="nav-link" href="/auth/register">
+                  Register
                 </Link>
               </>
             )}

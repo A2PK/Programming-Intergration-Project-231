@@ -8,7 +8,7 @@ export function ReserveRow({ no, act }: { no: number; act: UserActivity }) {
       <div className="col-4">{parseGoTime(act.endDate)}</div>
       <div className="col-2">{act.location}</div>
       <div className="col-2">
-        <button className="btn btn-outline-danger btn-sm">Cancel</button>
+        {/* <button className="btn btn-outline-danger btn-sm">Cancel</button> */}
       </div>
     </div>
   );

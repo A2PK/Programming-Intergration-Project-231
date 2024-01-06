@@ -1,4 +1,7 @@
+import { ObjectId } from "mongodb";
+
 export interface User {
+  id: ObjectId;
   phonenum: string;
   age: number;
   gender: string;
@@ -13,6 +16,7 @@ export interface User {
 }
 
 export interface UserActivity {
+  bookId: ObjectId;
   bookName: string;
   startDate: Date;
   endDate: Date;
