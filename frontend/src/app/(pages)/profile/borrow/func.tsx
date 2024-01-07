@@ -12,7 +12,7 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
     const id = localStorage.getItem("userID");
     try {
       const res = await axios.post(
-        domain + "/users/" + id + "/extendBorrow/" + String(act.bookId)
+        domain + "/users/" + id + "/extendBorrow/" + String(act.bookId),
       );
       console.log(res.data.message);
     } catch (error) {

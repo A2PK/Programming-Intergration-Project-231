@@ -1,198 +1,291 @@
-'use client'
-import Image from "next/image";
-import book1 from "/public/book3.jpg";
+"use client";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal } from 'bootstrap';
+import { Modal } from "bootstrap";
 import React, { useState, useEffect } from "react";
-import Script from 'next/script';
+import Script from "next/script";
 import { getBook } from "@/app/api/book_api";
 import { Book } from "@/app/models/Book";
-import axios from 'axios';
+import axios from "axios";
 import SearchBar from "@/app/components/searchbar/searchbarver2";
 import { redirect } from "next/navigation";
 export default function Bookdetail({
-    searchParams,
+  searchParams,
 }: {
-    searchParams: {
-        productid: string;
-    };
+  searchParams: {
+    productid: string;
+  };
 }) {
-    <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" />
-    //function to get the book by id
-    const [book, setBook] = useState<Book>();
-    const [today, setToday] = useState('');
-    const [shownNotAvailable, setShownNotAvailable] = useState(false);
-    const [bookingsuccess, setBookingsuccess] = useState(false);
-    const productId = searchParams.productid;
+  <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" />;
+  //function to get the book by id
+  const domain =
+    process.env.NEXT_PUBLIC_PROTO +
+    process.env.NEXT_PUBLIC_HOST +
+    process.env.NEXT_PUBLIC_PORT;
+  const [book, setBook] = useState<Book>();
+  const [today, setToday] = useState("");
+  const [shownNotAvailable, setShownNotAvailable] = useState(false);
+  const [bookingsuccess, setBookingsuccess] = useState(false);
+  const productId = searchParams.productid;
+  const ID = localStorage.getItem("userID");
 
-    const fetchData = () => {
-        const data = getBook(productId)
-            .then((data) => {
-                const temp: Book = data;
-                setBook(temp);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+  const fetchData = () => {
+    const data = getBook(productId)
+      .then((data) => {
+        const temp: Book = data;
+        setBook(temp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    useEffect(() => {
-        fetchData();
+  useEffect(() => {
+    fetchData();
 
-        const searchValue = localStorage.getItem('searchValue');
-        if (searchValue && searchValue != "") {
-            redirect("./search?value=" + searchValue);
-        } else {
-            console.log("no success")
-        }
-    }, []);
+    const searchValue = localStorage.getItem("searchValue");
+    if (searchValue && searchValue != "") {
+      redirect("./search?value=" + searchValue);
+    } else {
+      //console.log("no success")
+    }
+  }, []);
 
-    const handleBorrowClick = () => {
-        if (book && !book.condition) {
-            setShownNotAvailable(true);
-        } else {
-            const modalElement = document.getElementById('BookReserveModal');
-            if (modalElement) {
-                const currentDate = new Date();
-                const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-                const day = currentDate.getDate().toString().padStart(2, '0');
-                const year = currentDate.getFullYear();
-                const formattedDate = `${year}-${month}-${day}`; // Format as YYYY-MM-DD for input type="date"
-                setToday(formattedDate);
-                const myModal = new Modal(modalElement);
-                myModal.show();
-            }
-        }
-    };
-    // function handle modal
-    const handleConfirm = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        try {
-            const response = await axios.post('http://localhost:8080/books/reserve', {
-                userID: "ddd",
-                bookID: productId, //string
-            });
-            console.log('Reservation confirmed!', response.data);
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error('Error confirming reservation:', error.message);
-            } else {
-                console.error('Unknown error:', error);
-            }
-        }
-        setBookingsuccess(true);
-    };
+  const handleBorrowClick = () => {
+    if (book && book.availability == 0) {
+      const modalElement = document.getElementById("BookReserveModal");
+      if (modalElement) {
+        const currentDate = new Date();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+        const day = currentDate.getDate().toString().padStart(2, "0");
+        const year = currentDate.getFullYear();
+        const formattedDate = `${year}-${month}-${day}`; // Format as YYYY-MM-DD for input type="date"
+        setToday(formattedDate);
+        const myModal = new Modal(modalElement);
+        myModal.show();
+      }
+    } else {
+      setShownNotAvailable(true);
+    }
+  };
+  // function handle modal
+  const handleConfirm = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        domain + "/users/" + ID + "/reserve/" + productId,
+      );
+      console.log("Reservation confirmed!", response.data);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error confirming reservation:", error.message);
+      } else {
+        console.error("Unknown error:", error);
+      }
+    }
+    setBookingsuccess(true);
+  };
 
-
-    return (
+  return (
+    <div>
+      <SearchBar />
+      <div style={{ fontFamily: "Inria Serif, serif" }} className="mx-4">
         <div>
-            <SearchBar />
-            <div style={{ fontFamily: 'Inria Serif, serif' }} className="mx-4">
-                <div>
-                    <p className="fs-1 fw-semibold mt-5 mb-4 mx-2 text-danger-emphasis text-center"></p>
-                    {/* Book detail infor */}
-                </div>
-                <div className="row">
-                    <div className="col-md-6 my-2 d-flex justify-content-center align-items-center" style={{ paddingRight: '25px', borderRight: '0.3px solid #333' }}>
-                        <button className="d-block rounded img-fluid border-0 mx-2 bg-transparent border-0">
-                            <img
-                                src={book ? book.image_url : "https://i.ibb.co/yRsQjBX/extend-Sequence.png"}
-                                alt="book1"
-                                width="68%"
-                                // height="190"
-                                className="img-thumbnail"
-                            />
-                        </button>
-                    </div>
-                    <div className="col-md-6 px-3 fs-6">
-                        <p className="fw-semibold fs-2">{book ? book.name : "NaN"}</p>
-                        <p><b>Genre: &nbsp; </b> {book ? book.genre : "NaN"}</p>
-                        <p><b>Author: &nbsp; </b> {book ? book.author : "NaN"}</p>
-                        <p><b>Condition: &nbsp; </b> {book ? (book.condition ? "Available" : "No available") : "NaN"}</p>
-                        <p><b>Publisher: &nbsp; </b> {book ? book.publisher : "NaN"}</p>
-                        <p>
-                            <b>Publish date:  &nbsp;</b>{' '}
-
-                            {book
-                                ? (
-                                    book.publishdate instanceof Date
-                                        ? book.publishdate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-                                        : new Date(book.publishdate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-                                )
-                                : '02/04/2010'}
-
-                        </p>
-                        <p><b>Pages:&nbsp;</b> {book ? book.totalpages : 0}</p>
-                        <div className="mt-5 mb-3 row">
-                            <div className="col-md-2"><p><b>Description:</b></p></div>
-                            <div className="col-md-9"><p>{book ? book.description : "NaN"}</p>
-                                <button onClick={handleBorrowClick} className="btn btn-dark rounded-5 my-2">Borrow Now </button>&nbsp;&nbsp;&nbsp;
-                                <button className="btn btn-info rounded-5 text-dark">Preview</button>
-                            </div>
-                        </div>
-                        {shownNotAvailable && (
-                            <div className="alert alert-danger" role="alert">
-                                This book is not available.
-                            </div>
-                        )}
-                        {bookingsuccess && (
-                            <div className="alert alert-success" role="alert">
-                                You've just reserved this book successfully.<br></br>
-                                <b><u>Note</u></b>: Remember to take the book <b>within 3 days</b> at the library. Otherwise, you will be fined by caution.
-                            </div>
-                        )}
-                    </div>
-                </div>
-                <div className="modal" id="BookReserveModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h4 className="modal-title">Booking book reservation</h4>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <form action="" method="post" onSubmit={handleConfirm}>
-                                            <div className="form-group mb-2">
-                                                <label htmlFor="">Book</label>
-                                                <input required type="text" readOnly name="bookName" value={book ? book.name : ""} id="bookName" className="form-control" />
-                                            </div>
-                                            <div className="form-group mb-2">
-                                                <label htmlFor="">Author</label>
-                                                <input required type="text" readOnly name="bookAuthor" value={book ? book.author : ""} id="bookAuthor" className="form-control" />
-                                            </div>
-                                            <div className="form-group mb-2">
-                                                <label htmlFor="">Genre</label>
-                                                <input required type="text" readOnly name="bookGenre" value={book ? book.genre : "NaN"} id="bookGenre" className="form-control" />
-                                            </div>
-                                            <div className="form-group mb-2">
-                                                <label htmlFor="">Reserve date:</label>
-                                                <input
-                                                    required
-                                                    type="date"
-                                                    name="bookDate"
-                                                    id="bookDate"
-                                                    className="form-control"
-                                                    value={today}
-                                                    readOnly
-                                                />
-                                            </div>
-                                            <div className="form-group mb-2">
-                                                <label htmlFor="">Do you want to reserve this book ?</label>
-                                            </div>
-                                            <div className="form-group">
-                                                <button className="btn btn-primary" type="submit" name="patientcancel">Confirm</button>
-                                                <button type="button" className="btn btn-danger mx-2" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <p className="fs-1 fw-semibold mt-5 mb-4 mx-2 text-danger-emphasis text-center"></p>
+          {/* Book detail infor */}
         </div>
-    )
+        <div className="row">
+          <div
+            className="col-md-6 my-2 d-flex justify-content-center align-items-center"
+            style={{ paddingRight: "25px", borderRight: "0.3px solid #333" }}
+          >
+            <button className="d-block rounded img-fluid border-0 mx-2 bg-transparent border-0">
+              <img
+                src={
+                  book
+                    ? book.image_url
+                    : "https://i.ibb.co/yRsQjBX/extend-Sequence.png"
+                }
+                alt="book1"
+                width="68%"
+                // height="190"
+                className="img-thumbnail"
+              />
+            </button>
+          </div>
+          <div className="col-md-6 px-3 fs-6">
+            <p className="fw-semibold fs-2">{book ? book.name : "NaN"}</p>
+            <p>
+              <b>Genre: &nbsp; </b> {book ? book.genre : "NaN"}
+            </p>
+            <p>
+              <b>Author: &nbsp; </b> {book ? book.author : "NaN"}
+            </p>
+            <p>
+              <b>Condition: &nbsp; </b>{" "}
+              {book
+                ? book.availability == 0
+                  ? "Available"
+                  : "Not available"
+                : "NaN"}
+            </p>
+            <p>
+              <b>Publisher: &nbsp; </b> {book ? book.publisher : "NaN"}
+            </p>
+            <p>
+              <b>Publish date: &nbsp;</b>{" "}
+              {book
+                ? book.publishdate instanceof Date
+                  ? book.publishdate.toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                  : new Date(book.publishdate).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                : "02/04/2010"}
+            </p>
+            <p>
+              <b>Pages:&nbsp;</b> {book ? book.totalpages : 0}
+            </p>
+            <div className="mt-5 mb-3 row">
+              <div className="col-md-2">
+                <p>
+                  <b>Description:</b>
+                </p>
+              </div>
+              <div className="col-md-9">
+                <p>{book ? book.description : "NaN"}</p>
+                {ID ? (
+                  <button
+                    onClick={handleBorrowClick}
+                    className="btn btn-dark rounded-5 my-2 me-4"
+                  >
+                    Borrow Now{" "}
+                  </button>
+                ) : null}
+                <button className="btn btn-info rounded-5 text-dark">
+                  Preview
+                </button>
+              </div>
+            </div>
+            {shownNotAvailable && (
+              <div className="alert alert-danger" role="alert">
+                This book is not available.
+              </div>
+            )}
+            {bookingsuccess && (
+              <div className="alert alert-success" role="alert">
+                You've just reserved this book successfully.<br></br>
+                <b>
+                  <u>Note</u>
+                </b>
+                : Remember to take the book <b>within 3 days</b> at the library.
+                Otherwise, you will be fined by caution.
+              </div>
+            )}
+          </div>
+        </div>
+        <div
+          className="modal"
+          id="BookReserveModal"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h4 className="modal-title">Booking book reservation</h4>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="row">
+                  <div className="col-md-12">
+                    <form action="" method="post" onSubmit={handleConfirm}>
+                      <div className="form-group mb-2">
+                        <label htmlFor="">Book</label>
+                        <input
+                          required
+                          type="text"
+                          readOnly
+                          name="bookName"
+                          value={book ? book.name : ""}
+                          id="bookName"
+                          className="form-control"
+                        />
+                      </div>
+                      <div className="form-group mb-2">
+                        <label htmlFor="">Author</label>
+                        <input
+                          required
+                          type="text"
+                          readOnly
+                          name="bookAuthor"
+                          value={book ? book.author : ""}
+                          id="bookAuthor"
+                          className="form-control"
+                        />
+                      </div>
+                      <div className="form-group mb-2">
+                        <label htmlFor="">Genre</label>
+                        <input
+                          required
+                          type="text"
+                          readOnly
+                          name="bookGenre"
+                          value={book ? book.genre : "NaN"}
+                          id="bookGenre"
+                          className="form-control"
+                        />
+                      </div>
+                      <div className="form-group mb-2">
+                        <label htmlFor="">Reserve date:</label>
+                        <input
+                          required
+                          type="date"
+                          name="bookDate"
+                          id="bookDate"
+                          className="form-control"
+                          value={today}
+                          readOnly
+                        />
+                      </div>
+                      <div className="form-group mb-2">
+                        <label htmlFor="">
+                          Do you want to reserve this book ?
+                        </label>
+                      </div>
+                      <div className="form-group">
+                        <button
+                          className="btn btn-primary"
+                          type="submit"
+                          name="patientcancel"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-danger mx-2"
+                          data-bs-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

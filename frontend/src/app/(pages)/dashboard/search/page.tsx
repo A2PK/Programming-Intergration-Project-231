@@ -1,8 +1,5 @@
 "use client";
-import Image from "next/image";
-import book1 from "/public/book3.jpg";
 import Link from "next/link";
-import Carousel from "@/app/components/carousel/carouselver2";
 import SearchBar from "@/app/components/searchbar/searchbarver2";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -16,34 +13,38 @@ const SearchPage = ({
   };
 }) => {
   const [bookdata, setData] = useState([]);
+  const domain =
+    process.env.NEXT_PUBLIC_PROTO +
+    process.env.NEXT_PUBLIC_HOST +
+    process.env.NEXT_PUBLIC_PORT;
   useEffect(() => {
     let searchValue = localStorage.getItem("searchValue");
     if (searchValue && searchValue != "") {
       localStorage.removeItem("searchValue");
       redirect("./search?value=" + searchValue);
     } else {
-      console.log("no success");
+      //console.log("no success");
     }
     if (searchParams && searchParams.value != "") {
       searchValue = searchParams.value;
     }
     if (searchValue && searchValue != "") {
       axios
-        .get("http://localhost:8080/books/search/" + searchValue)
+        .get(domain + "/books/search/" + searchValue)
         .then((res) => setData(res.data))
         .catch((err) => console.log(err));
     } else if (searchValue && searchValue == "") {
-      console.log("no success");
+      //console.log("no success");
       axios
-        .get("http://localhost:8080/books/getAll")
+        .get(domain + "/books/getAll")
         .then((res) => setData(res.data)) //setData(res.data.items)
         .catch((err) => console.log(err));
     } else if (!searchValue) {
       axios
-        .get("http://localhost:8080/books/getAll")
+        .get(domain + "/books/getAll")
         .then((res) => setData(res.data)) //setData(res.data.items)
         .catch((err) => console.log(err));
-      console.log("nope");
+      //console.log("nope");
     }
   }, []);
 
@@ -84,16 +85,7 @@ const SearchPage = ({
         className="container-fluid"
         style={{ fontFamily: "Inria Serif, serif" }}
       >
-        {/* <Carousel /> */}
-        <div>
-          <p
-            className="text-center mx-4 mt-3 fs-2 justify-center fst-italic fw-semibold text-danger-emphasis"
-            style={{ fontFamily: "Inria Serif, serif" }}
-          >
-            All books
-          </p>
-        </div>
-        <div className="row row-cols-1 row-cols-sm-5 justify-content-center gap-1">
+        <div className="mt-5 row row-cols-1 row-cols-sm-5 justify-content-center gap-1">
           {currentProducts.map((product) => (
             <div key={product.id} className="card col mb-4 p-0 mx-2">
               <div className="myDiv">
@@ -117,7 +109,6 @@ const SearchPage = ({
                   </i>{" "}
                   {product.author}
                 </p>
-                {/* <Link href={`/dashboard/bookdetail?productid=${product.id}`} className="btn btn-primary">View detail</Link> */}
                 <Link
                   href={{
                     pathname: `/dashboard/bookdetail`,

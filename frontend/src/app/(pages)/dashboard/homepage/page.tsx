@@ -1,9 +1,4 @@
 "use client";
-import Image from "next/image";
-import book1 from "/public/book3.jpg";
-import book2 from "/public/book2.jpeg";
-import book3 from "/public/book1.webp";
-import book4 from "/public/psy.jpg";
 import SearchBar from "@/app/components/searchbar/searchbarver2";
 import React, { useState, useEffect } from "react";
 import { redirect } from "next/navigation";
@@ -14,7 +9,7 @@ export default function Homepage() {
     if (searchValue && searchValue != "") {
       redirect("./search?value=" + searchValue);
     } else {
-      console.log("no success");
+      //console.log("no success");
     }
   }, []);
   return (

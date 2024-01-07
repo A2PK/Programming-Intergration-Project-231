@@ -1,7 +1,7 @@
 "use client";
 import "./page.css";
 import Image from "next/image";
-import logo from "public/Logo_BK.png";
+import logo from "./Logo_BK.png";
 import { FormEvent, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
