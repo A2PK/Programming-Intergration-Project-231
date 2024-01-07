@@ -3,7 +3,9 @@ package controller
 import (
 	"fmt"
 	entity "go-jwt/internal/entity"
+	middleware "go-jwt/internal/middleware"
 	request "go-jwt/internal/request"
+	token "go-jwt/internal/token"
 	usecase "go-jwt/internal/usecase"
 	"net/http"
 
@@ -20,8 +22,12 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 		userService:    userService,
 		NewUserRequest: request.NewUserRequest,
 	}
-
-	userRoutes := router.Group("/users")
+	publicRoutes := router.Group("/hello")
+	{
+		publicRoutes.POST("/login", userController.login)
+		publicRoutes.POST("/", userController.create)
+	}
+	userRoutes := router.Group("/users").Use(middleware.JwtAuthMiddleware())
 	{
 		userRoutes.Use(CORS())
 		userRoutes.POST("/", userController.create)
@@ -34,9 +40,20 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 		userRoutes.POST("/:id/extendBorrow/:bookId", userController.extendBorrow)
 		userRoutes.GET("/:id/borrows", userController.getBorrowList)
 		userRoutes.GET("/:id/reservations", userController.getReservationList)
+		userRoutes.GET("/currentuser", getCurrentUser)
 	}
 }
+func getCurrentUser(c *gin.Context) {
+	username, err := token.ExtractTokenID(c)
 
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success", "data": username})
+
+}
 func (h UserController) create(ctx *gin.Context) {
 	request := h.NewUserRequest()
 
@@ -149,7 +166,7 @@ func (h UserController) login(ctx *gin.Context) {
 
 	fmt.Print(request.GetUsername(), request.GetPassword())
 
-	user, err := h.userService.AuthenticateUser(ctx, request.GetUsername(), request.GetPassword())
+	token, err := h.userService.AuthenticateUser(ctx, request.GetUsername(), request.GetPassword())
 
 	if err != nil {
 		fmt.Println("login user failed:", err.Error())
@@ -159,7 +176,7 @@ func (h UserController) login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, gin.H{"token": token})
 }
 
 func (h UserController) reserve(ctx *gin.Context) {

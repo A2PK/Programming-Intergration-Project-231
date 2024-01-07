@@ -5,6 +5,7 @@ import (
 	"fmt"
 	entity "go-jwt/internal/entity"
 	repository "go-jwt/internal/infrastructure/repository"
+	token "go-jwt/internal/token"
 	"time"
 )
 
@@ -20,7 +21,7 @@ type UserUsecase interface {
 	GetUser(ctx context.Context, id string) (*entity.User, error)
 	UpdateUser(ctx context.Context, id string, data *entity.User) (*entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
-	AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, error)
+	AuthenticateUser(ctx context.Context, username string, password string) (string, error)
 	ReserveBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
 	BorrowBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
 	ExtendBorrowBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
@@ -49,22 +50,34 @@ func (s *userUsecase) DeleteUser(ctx context.Context, id string) error {
 	return s.userRepo.DeleteUser(ctx, id)
 }
 
-func (s *userUsecase) AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, error) {
+func (s *userUsecase) AuthenticateUser(ctx context.Context, username string, password string) (string, error) {
 	user, err := s.userRepo.GetUserByUsername(ctx, username)
 
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	if user == nil {
-		return nil, entity.ERR_USER_NOT_FOUND
+		return "", entity.ERR_USER_NOT_FOUND
 	}
+	//skip Verify package: we can use hashed for pw
+	// hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password),bcrypt.DefaultCost)
+
+	// func VerifyPassword(password,hashedPassword string) error {
+	// 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	// }
 
 	if user.Password != password {
-		return nil, entity.ERR_USER_PASSWORD_NOT_MATCH
+		return "", entity.ERR_USER_PASSWORD_NOT_MATCH
 	}
 
-	return user, nil
+	token, err := token.GenerateToken(user.Username)
+
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 func (s *userUsecase) ReserveBook(ctx context.Context, userID string, bookID string) (*entity.User, error) {
