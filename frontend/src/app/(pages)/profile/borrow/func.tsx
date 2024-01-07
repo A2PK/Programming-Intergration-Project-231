@@ -1,5 +1,5 @@
 import { UserActivity } from "@/app/models/User";
-import { parseGoTime } from "@/app/api/time";
+import { parseGoTime, checkGoNull } from "@/app/api/time";
 import axios from "axios";
 
 const domain =
@@ -24,9 +24,9 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
       <div className="col-1">{no}</div>
       <div className="col-5">{act.bookName}</div>
       <div className="col-4">
-        {act.extendedDate
-          ? parseGoTime(act.extendedDate)
-          : parseGoTime(act.endDate)}
+        {checkGoNull(act.extendedDate)
+          ? parseGoTime(act.endDate)
+          : parseGoTime(act.extendedDate)}
       </div>
       <div className="col-2">
         <button
@@ -58,9 +58,9 @@ export function HistoryRow({ no, act }: { no: number; act: UserActivity }) {
       <div className="col-5">{act.bookName}</div>
       <div className="col-3">{parseGoTime(act.startDate)}</div>
       <div className="col-3">
-        {act.extendedDate
-          ? parseGoTime(act.extendedDate)
-          : parseGoTime(act.endDate)}
+        {checkGoNull(act.extendedDate)
+          ? parseGoTime(act.endDate)
+          : parseGoTime(act.extendedDate)}
       </div>
     </div>
   );
