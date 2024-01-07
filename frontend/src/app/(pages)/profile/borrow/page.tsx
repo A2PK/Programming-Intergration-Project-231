@@ -18,11 +18,11 @@ export default function BorrowPage() {
           throw new Error("No userID in localStorage");
         }
         const res = await getBorrows(id);
-        const borrowedList: UserActivity[] = res.data.borrowedList;
-        const borrowingList: UserActivity[] = res.data.borrowingList;
+        const borrowedList: UserActivity[] = res.data.borrowHistory;
+        const borrowingList: UserActivity[] = res.data.currentBorrowings;
 
-        setBorrows(borrowedList);
-        setHistory(borrowingList);
+        setBorrows(borrowingList);
+        setHistory(borrowedList);
       } catch (error) {
         console.log(error);
       }

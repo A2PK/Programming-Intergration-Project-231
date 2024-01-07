@@ -30,7 +30,7 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 		userRoutes.DELETE("/:id", userController.delete)
 		userRoutes.POST("/login", userController.login)
 		userRoutes.POST("/:id/reserve/:bookId", userController.reserve)
-		userRoutes.POST("/:id/extendReserve/:bookId", userController.borrow)
+		userRoutes.POST("/:id/borrow/:bookId", userController.borrow)
 		userRoutes.POST("/:id/extendBorrow/:bookId", userController.extendBorrow)
 		userRoutes.GET("/:id/borrows", userController.getBorrowList)
 		userRoutes.GET("/:id/reservations", userController.getReservationList)
@@ -213,7 +213,7 @@ func (h UserController) extendBorrow(ctx *gin.Context) {
 func (h UserController) getBorrowList(ctx *gin.Context) {
 	request := h.NewUserRequest()
 
-	borrowingList, borrowedList, err := h.userService.GetBorrowList(ctx, request.GetIDFromURL(ctx))
+	currentBorrowings, borrowHistory, err := h.userService.GetBorrowList(ctx, request.GetIDFromURL(ctx))
 
 	if err != nil {
 		fmt.Println("get borrow list failed:", err.Error())
@@ -223,7 +223,7 @@ func (h UserController) getBorrowList(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"borrowingList": borrowingList, "borrowedList": borrowedList})
+	ctx.JSON(http.StatusOK, gin.H{"currentBorrowings": currentBorrowings, "borrowHistory": borrowHistory})
 }
 
 func (h UserController) getReservationList(ctx *gin.Context) {
