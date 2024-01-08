@@ -1,7 +1,6 @@
 "use client";
 import "./page.css";
 import Image from "next/image";
-import logo from "public/Logo_BK.png";
 import { FormEvent, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -45,7 +44,7 @@ export default function RegisterPage() {
           <h2>The Future Library</h2>
           Your online sanctuary for book lovers
           <br />
-          <Image src={logo} width={120} alt="BK logo" className="my-3" />
+          <Image src="public/Logo_BK.png" width={120} alt="BK logo" className="my-3" />
           {err ? <div className="alert alert-danger">{err}</div> : null}
           <div className="mb-3">
             <input
