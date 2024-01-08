@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation";
 import { User } from "@/app/models/User";
 
 const domain =
-  process.env.NEXT_PUBLIC_PROTO +
-  process.env.NEXT_PUBLIC_HOST +
+  (process.env.NEXT_PUBLIC_PROTO ?? "") +
+  (process.env.NEXT_PUBLIC_HOST ?? "") +
   process.env.NEXT_PUBLIC_PORT;
 
 export default function RegisterPage() {
