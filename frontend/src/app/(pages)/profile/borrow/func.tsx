@@ -3,8 +3,8 @@ import { parseGoTime, checkGoNull } from "@/app/api/time";
 import axios from "axios";
 
 const domain =
-  process.env.NEXT_PUBLIC_PROTO +
-  process.env.NEXT_PUBLIC_HOST +
+  (process.env.NEXT_PUBLIC_PROTO ?? "") +
+  (process.env.NEXT_PUBLIC_HOST ?? "") +
   process.env.NEXT_PUBLIC_PORT;
 
 export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {

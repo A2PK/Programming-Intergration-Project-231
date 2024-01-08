@@ -18,8 +18,8 @@ export default function Bookdetail({
   <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" />;
   //function to get the book by id
   const domain =
-    process.env.NEXT_PUBLIC_PROTO +
-    process.env.NEXT_PUBLIC_HOST +
+    (process.env.NEXT_PUBLIC_PROTO ?? "") +
+    (process.env.NEXT_PUBLIC_HOST ?? "") +
     process.env.NEXT_PUBLIC_PORT;
   const [book, setBook] = useState<Book>();
   const [today, setToday] = useState("");
@@ -148,7 +148,7 @@ export default function Bookdetail({
                 : "02/04/2010"}
             </p>
             <p>
-              <b>Pages:&nbsp;</b> {book ? book.totalpages : 0}
+              <b>Pages:&nbsp;</b> {book ? book.totalpages.toString() : "0"}
             </p>
             <div className="mt-5 mb-3 row">
               <div className="col-md-2">

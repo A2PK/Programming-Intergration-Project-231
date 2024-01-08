@@ -14,8 +14,8 @@ const SearchPage = ({
 }) => {
   const [bookdata, setData] = useState([]);
   const domain =
-    process.env.NEXT_PUBLIC_PROTO +
-    process.env.NEXT_PUBLIC_HOST +
+    (process.env.NEXT_PUBLIC_PROTO ?? "") +
+    (process.env.NEXT_PUBLIC_HOST ?? "") +
     process.env.NEXT_PUBLIC_PORT;
   useEffect(() => {
     let searchValue = localStorage.getItem("searchValue");
