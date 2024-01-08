@@ -18,7 +18,10 @@ const SearchPage = ({
     (process.env.NEXT_PUBLIC_HOST ?? "") +
     process.env.NEXT_PUBLIC_PORT;
   useEffect(() => {
-    let searchValue = localStorage.getItem("searchValue");
+    var searchValue: any;
+  if (typeof window !== 'undefined') {
+    searchValue = localStorage.getItem("searchValue");
+  }
     if (searchValue && searchValue != "") {
       localStorage.removeItem("searchValue");
       redirect("./search?value=" + searchValue);

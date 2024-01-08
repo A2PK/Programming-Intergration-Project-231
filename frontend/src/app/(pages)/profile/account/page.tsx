@@ -8,7 +8,11 @@ import { useEffect, useState } from "react";
 export default function AccountPage() {
   const [user, setUser] = useState<User>();
   const [isLoading, setIsLoading] = useState(true);
-  const id = localStorage.getItem("userID");
+  var id: any;
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+    id = localStorage.getItem("userID");
+  }
 
   useEffect(() => {
     const fetchData = async () => {

@@ -5,7 +5,10 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 export default function Homepage() {
   useEffect(() => {
-    const searchValue = localStorage.getItem("searchValue");
+    var searchValue: any;
+  if (typeof window !== 'undefined') {
+    searchValue = localStorage.getItem("searchValue");
+  }
     if (searchValue && searchValue != "") {
       redirect("./search?value=" + searchValue);
     } else {

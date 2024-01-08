@@ -3,22 +3,27 @@
 import "./navbar.css";
 import logo from "/public/Logo_BK.png";
 import Image from "next/image";
-import "bootstrap/dist/js/bootstrap.min.js";
+// import "bootstrap/dist/js/bootstrap.min.js";
+import Script from "next/script";
 import Link from "next/link";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function NavBar(): React.JSX.Element {
-  const id = localStorage.getItem("userID");
-  const username = localStorage.getItem("username");
-
-  const handleLogout = () => {
-    localStorage.removeItem("userID");
-    localStorage.removeItem("username");
+  var id, username;
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+    id = localStorage.getItem("userID");
+    username = localStorage.getItem("username");
+  }
+    const handleLogout = () => {
+      localStorage.removeItem("userID");
+      localStorage.removeItem("username");
   };
 
   return (
     <nav className="navbar navbar-expand-md bg-body-tertiary">
+      <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" />;
       <div className="container-fluid">
         <Link className="navbar-brand" href="/dashboard/homepage">
           <div className="row align-items-center justify-content-center ps-3">

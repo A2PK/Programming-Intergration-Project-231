@@ -9,7 +9,11 @@ export default function BorrowPage() {
   const [borrows, setBorrows] = useState<UserActivity[]>([]);
   const [history, setHistory] = useState<UserActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const id = localStorage.getItem("userID");
+  var id: any;
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+    id = localStorage.getItem("userID");
+  }
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1,7 +1,7 @@
 "use client";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Modal } from "bootstrap";
-import React, { useState, useEffect } from "react";
+import { Modal } from 'react-bootstrap';
+import React, { useState, useEffect ,useRef} from "react";
 import Script from "next/script";
 import { getBook } from "@/app/api/book_api";
 import { Book } from "@/app/models/Book";
@@ -42,7 +42,10 @@ export default function Bookdetail({
   useEffect(() => {
     fetchData();
 
-    const searchValue = localStorage.getItem("searchValue");
+    var searchValue: any;
+  if (typeof window !== 'undefined') {
+    searchValue = localStorage.getItem("searchValue");
+  }
     if (searchValue && searchValue != "") {
       redirect("./search?value=" + searchValue);
     } else {
@@ -50,22 +53,25 @@ export default function Bookdetail({
     }
   }, []);
 
+  const [showModal, setShowModal] = useState(false);
+
   const handleBorrowClick = () => {
-    if (book && book.availability == 0) {
-      const modalElement = document.getElementById("BookReserveModal");
-      if (modalElement) {
-        const currentDate = new Date();
-        const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-        const day = currentDate.getDate().toString().padStart(2, "0");
-        const year = currentDate.getFullYear();
-        const formattedDate = `${year}-${month}-${day}`; // Format as YYYY-MM-DD for input type="date"
-        setToday(formattedDate);
-        const myModal = new Modal(modalElement);
-        myModal.show();
-      }
+    if (book && book.availability === 0) {
+      const currentDate = new Date();
+      const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = currentDate.getDate().toString().padStart(2, '0');
+      const year = currentDate.getFullYear();
+      const formattedDate = `${year}-${month}-${day}`; // Format as YYYY-MM-DD for input type="date"
+      setToday(formattedDate);
+
+      setShowModal(true);
     } else {
       setShownNotAvailable(true);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
   // function handle modal
   const handleConfirm = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -188,8 +194,10 @@ export default function Bookdetail({
             )}
           </div>
         </div>
-        <div
+        <Modal
           className="modal"
+          show={showModal} 
+          onHide={handleCloseModal} 
           id="BookReserveModal"
           role="dialog"
           aria-labelledby="exampleModalLabel"
@@ -284,7 +292,7 @@ export default function Bookdetail({
               </div>
             </div>
           </div>
-        </div>
+        </Modal>
       </div>
     </div>
   );

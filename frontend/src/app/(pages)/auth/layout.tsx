@@ -1,5 +1,4 @@
 import "./layout.css";
-
 export default function AuthLayout({
   children,
 }: {
