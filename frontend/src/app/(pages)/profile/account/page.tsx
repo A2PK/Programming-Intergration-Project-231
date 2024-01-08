@@ -37,7 +37,7 @@ export default function AccountPage() {
 
   return (
     <>
-      <h2>Personal Information</h2>
+      <h2 className="text-dark">Personal Information</h2>
       <hr />
       {user ? <PersonalInfo user={user} /> : <></>}
     </>

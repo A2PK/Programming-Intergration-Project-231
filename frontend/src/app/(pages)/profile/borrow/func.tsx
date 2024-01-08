@@ -31,7 +31,7 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
       <div className="col-2">
         <button
           onClick={handleExtend}
-          className="btn btn-outline-secondary btn-sm"
+          className="btn btn-outline-secondary btn-sm text-dark"
         >
           Extend
         </button>
@@ -42,7 +42,7 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
 
 export function BorrowHeader() {
   return (
-    <div className="row mb-3 fw-bold">
+    <div className="row mb-3 fw-bold text-dark" >
       <div className="col-1">No.</div>
       <div className="col-5">Book Name</div>
       <div className="col-4">Dued Date</div>
@@ -53,7 +53,7 @@ export function BorrowHeader() {
 
 export function HistoryRow({ no, act }: { no: number; act: UserActivity }) {
   return (
-    <div className="row mb-3">
+    <div className="row mb-3 text-dark">
       <div className="col-1">{no}</div>
       <div className="col-5">{act.bookName}</div>
       <div className="col-3">{parseGoTime(act.startDate)}</div>

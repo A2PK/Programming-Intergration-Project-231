@@ -41,7 +41,7 @@ export default function BorrowPage() {
 
   return (
     <>
-      <div className="mb-3">
+      <div className="mb-3 text-dark">
         <h2>Current Borrowings</h2>
         <hr />
         <BorrowHeader />
@@ -49,7 +49,7 @@ export default function BorrowPage() {
           <BorrowRow no={index + 1} act={book} key={index} />
         ))}
       </div>
-      <div>
+      <div className="text-dark">
         <h2>Borrow History</h2>
         <hr />
         <HistoryHeader />

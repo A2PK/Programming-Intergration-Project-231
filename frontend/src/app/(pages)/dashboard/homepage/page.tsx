@@ -27,7 +27,7 @@ export default function Homepage() {
             <p className="fs-1 fw-semibold text-danger-emphasis">
               The Psychology of Money
             </p>
-            <p className="fs-5 fw-light fst-italic" style={{ width: "85%" }}>
+            <p className="fs-5 fw-light fst-italic text-dark" style={{ width: "85%" }}>
               The Psychology of Money is a book written by Morgan Housel that
               explores the psychology behind the way people approach and think
               about money. The book discusses various topics such as how money
@@ -35,7 +35,7 @@ export default function Homepage() {
             </p>
             <br></br>
             <Link href={"./search"}>
-              <button className="btn btn-dark rounded-5 fs-5 my-2">
+              <button className="btn btn-dark rounded-5 fs-5 my-2 text-white">
                 Read More{" "}
               </button>
             </Link>
