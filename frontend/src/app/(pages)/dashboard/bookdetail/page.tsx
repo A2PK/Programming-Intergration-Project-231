@@ -26,7 +26,11 @@ export default function Bookdetail({
   const [shownNotAvailable, setShownNotAvailable] = useState(false);
   const [bookingsuccess, setBookingsuccess] = useState(false);
   const productId = searchParams.productid;
-  const ID = localStorage.getItem("userID");
+  var ID: any;
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+    ID = localStorage.getItem("userID");
+  }
 
   const fetchData = () => {
     const data = getBook(productId)
@@ -56,7 +60,7 @@ export default function Bookdetail({
   const [showModal, setShowModal] = useState(false);
 
   const handleBorrowClick = () => {
-    if (book && book.availability === 0) {
+    if ((book && book.availability === 0) && (!bookingsuccess)) {
       const currentDate = new Date();
       const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
       const day = currentDate.getDate().toString().padStart(2, '0');
@@ -177,9 +181,14 @@ export default function Bookdetail({
                 </button>
               </div>
             </div>
-            {shownNotAvailable && (
+            {shownNotAvailable && (!bookingsuccess) && (
               <div className="alert alert-danger" role="alert">
                 This book is not available.
+              </div>
+            )}
+            {shownNotAvailable && (bookingsuccess) && (
+              <div className="alert alert-warning" role="alert">
+                You can not reserve twice !!
               </div>
             )}
             {bookingsuccess && (
@@ -195,104 +204,86 @@ export default function Bookdetail({
           </div>
         </div>
         <Modal
-          className="modal"
-          show={showModal} 
-          onHide={handleCloseModal} 
-          id="BookReserveModal"
-          role="dialog"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h4 className="modal-title">Booking book reservation</h4>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
-              </div>
-              <div className="modal-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <form action="" method="post" onSubmit={handleConfirm}>
-                      <div className="form-group mb-2">
-                        <label htmlFor="">Book</label>
-                        <input
-                          required
-                          type="text"
-                          readOnly
-                          name="bookName"
-                          value={book ? book.name : ""}
-                          id="bookName"
-                          className="form-control"
-                        />
-                      </div>
-                      <div className="form-group mb-2">
-                        <label htmlFor="">Author</label>
-                        <input
-                          required
-                          type="text"
-                          readOnly
-                          name="bookAuthor"
-                          value={book ? book.author : ""}
-                          id="bookAuthor"
-                          className="form-control"
-                        />
-                      </div>
-                      <div className="form-group mb-2">
-                        <label htmlFor="">Genre</label>
-                        <input
-                          required
-                          type="text"
-                          readOnly
-                          name="bookGenre"
-                          value={book ? book.genre : "NaN"}
-                          id="bookGenre"
-                          className="form-control"
-                        />
-                      </div>
-                      <div className="form-group mb-2">
-                        <label htmlFor="">Reserve date:</label>
-                        <input
-                          required
-                          type="date"
-                          name="bookDate"
-                          id="bookDate"
-                          className="form-control"
-                          value={today}
-                          readOnly
-                        />
-                      </div>
-                      <div className="form-group mb-2">
-                        <label htmlFor="">
-                          Do you want to reserve this book ?
-                        </label>
-                      </div>
-                      <div className="form-group">
-                        <button
-                          className="btn btn-primary"
-                          type="submit"
-                          name="patientcancel"
-                        >
-                          Confirm
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger mx-2"
-                          data-bs-dismiss="modal"
-                        >
-                          Close
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
+      show={showModal}
+      onHide={handleCloseModal}
+      id="BookReserveModal"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Booking book reservation</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={handleConfirm}>
+          <div className="mb-3">
+            <label htmlFor="bookName" className="form-label">
+              Book
+            </label>
+            <input
+              type="text"
+              readOnly
+              name="bookName"
+              value={book ? book.name : ''}
+              id="bookName"
+              className="form-control"
+            />
           </div>
-        </Modal>
+          <div className="mb-3">
+            <label htmlFor="bookAuthor" className="form-label">
+              Author
+            </label>
+            <input
+              type="text"
+              readOnly
+              name="bookAuthor"
+              value={book ? book.author : ''}
+              id="bookAuthor"
+              className="form-control"
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="bookGenre" className="form-label">
+              Genre
+            </label>
+            <input
+              type="text"
+              readOnly
+              name="bookGenre"
+              value={book ? book.genre : 'NaN'}
+              id="bookGenre"
+              className="form-control"
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="bookDate" className="form-label">
+              Reserve date:
+            </label>
+            <input
+              type="date"
+              name="bookDate"
+              id="bookDate"
+              className="form-control"
+              value={today}
+              readOnly
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="confirmReservation">
+              Do you want to reserve this book?
+            </label>
+          </div>
+          <div className="mb-3">
+            <button className="btn btn-primary me-3" type="submit" name="confirmReservation">
+              Confirm
+            </button>
+            <button className="btn btn-danger" type="button" onClick={handleCloseModal}>
+              Close
+            </button>
+          </div>
+        </form>
+      </Modal.Body>
+    </Modal>
       </div>
     </div>
   );
