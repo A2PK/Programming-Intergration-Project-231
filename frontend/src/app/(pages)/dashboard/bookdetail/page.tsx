@@ -178,7 +178,7 @@ export default function Bookdetail({
             )}
             {bookingsuccess && (
               <div className="alert alert-success" role="alert">
-                You've just reserved this book successfully.<br></br>
+                You&apos;ve just reserved this book successfully.<br></br>
                 <b>
                   <u>Note</u>
                 </b>

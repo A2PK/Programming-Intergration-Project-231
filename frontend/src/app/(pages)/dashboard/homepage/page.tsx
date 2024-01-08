@@ -75,7 +75,7 @@ export default function Homepage() {
                     />
                   </button>
                 </Link>
-                <p className="text-md-center mt-1">Death's Head</p>
+                <p className="text-md-center mt-1">Death&apos;s Head</p>
               </div>
               <div className="mx-2 text-center">
                 <Link
