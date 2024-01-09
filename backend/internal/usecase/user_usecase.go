@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	entity "go-jwt/internal/entity"
 	repository "go-jwt/internal/infrastructure/repository"
 	token "go-jwt/internal/token"
@@ -136,9 +135,6 @@ func (s *userUsecase) ReserveBook(ctx context.Context, userID string, bookID str
 	// update user reserving book
 	user, err = s.userRepo.UpdateUser(ctx, userID, user)
 
-	//print user after
-	fmt.Println("user after", user)
-
 	if err != nil {
 		return nil, err
 	}
@@ -212,9 +208,6 @@ func (s *userUsecase) BorrowBook(ctx context.Context, userID string, bookID stri
 
 	// update user reserving book
 	user, err = s.userRepo.UpdateUser(ctx, userID, user)
-
-	//print user after
-	fmt.Println("user after", user)
 
 	if err != nil {
 		return nil, err

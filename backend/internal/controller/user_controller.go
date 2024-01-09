@@ -63,8 +63,6 @@ func (h UserController) login(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Print(request.GetUsername(), request.GetPassword())
-
 	user, token, err := h.userService.AuthenticateUser(ctx, request.GetUsername(), request.GetPassword())
 
 	if err != nil {
