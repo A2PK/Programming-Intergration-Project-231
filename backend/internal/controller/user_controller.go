@@ -24,6 +24,7 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 	}
 	publicRoutes := router.Group("/public")
 	{
+		publicRoutes.Use(CORS())
 		publicRoutes.POST("/login", userController.login)
 		publicRoutes.POST("/", userController.create)
 	}
