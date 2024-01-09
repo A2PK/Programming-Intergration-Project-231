@@ -78,7 +78,7 @@ export default function Homepage() {
                     />
                   </button>
                 </Link>
-                <p className="text-md-center mt-1">Death&apos;s Head</p>
+                <p className="text-md-center mt-1 text-dark">Death&apos;s Head</p>
               </div>
               <div className="mx-2 text-center">
                 <Link
@@ -99,7 +99,7 @@ export default function Homepage() {
                     />
                   </button>
                 </Link>
-                <p className="text-md-center mt-1">The Night Shift</p>
+                <p className="text-md-center mt-1 text-dark">The Night Shift</p>
               </div>
               <div className="mx-2 text-center">
                 <Link
@@ -120,7 +120,7 @@ export default function Homepage() {
                     />
                   </button>
                 </Link>
-                <p className="text-md-center mt-1">The Wager</p>
+                <p className="text-md-center mt-1 text-dark" >The Wager</p>
               </div>
             </div>
           </div>
@@ -152,10 +152,10 @@ export default function Homepage() {
               />
             </button>
           </Link>
-          <p className="text-center fst-italic fw-semibold fs-4">
+          <p className="text-center fst-italic fw-semibold fs-4 text-dark">
             No 1. The Psychology of Money
           </p>
-          <p className="text-center fw-normal fs-5">Author: Morgan Housel</p>
+          <p className="text-center fw-normal fs-5 text-dark">Author: Morgan Housel</p>
         </div>
       </div>
     </div>

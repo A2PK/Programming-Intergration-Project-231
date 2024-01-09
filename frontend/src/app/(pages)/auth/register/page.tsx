@@ -36,7 +36,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="h-100 text-center d-flex justify-content-center align-items-center">
+    <div className="h-100 text-center d-flex justify-content-center align-items-center text-dark">
       <span id="form" className="border rounded-3 p-4 shadow bg-white">
         <form onSubmit={handleSubmit}>
           <h1>

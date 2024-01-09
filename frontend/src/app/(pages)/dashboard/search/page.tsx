@@ -17,39 +17,42 @@ const SearchPage = ({
     (process.env.NEXT_PUBLIC_PROTO ?? "") +
     (process.env.NEXT_PUBLIC_HOST ?? "") +
     process.env.NEXT_PUBLIC_PORT;
-  useEffect(() => {
-    var searchValue: any;
-  if (typeof window !== 'undefined') {
-    searchValue = localStorage.getItem("searchValue");
-  }
-    if (searchValue && searchValue != "") {
-      localStorage.removeItem("searchValue");
-      redirect("./search?value=" + searchValue);
-    } else {
-      //console.log("no success");
-    }
-    if (searchParams && searchParams.value != "") {
-      searchValue = searchParams.value;
-    }
-    if (searchValue && searchValue != "") {
-      axios
-        .get(domain + "/books/search/" + searchValue)
-        .then((res) => setData(res.data))
-        .catch((err) => console.log(err));
-    } else if (searchValue && searchValue == "") {
-      //console.log("no success");
-      axios
-        .get(domain + "/books/getAll")
-        .then((res) => setData(res.data)) //setData(res.data.items)
-        .catch((err) => console.log(err));
-    } else if (!searchValue) {
-      axios
-        .get(domain + "/books/getAll")
-        .then((res) => setData(res.data)) //setData(res.data.items)
-        .catch((err) => console.log(err));
-      //console.log("nope");
-    }
-  }, []);
+    useEffect(() => {
+      var searchValue: any;
+      if (typeof window !== 'undefined') {
+        searchValue = localStorage.getItem("searchValue");
+      }
+      
+      if (searchValue && searchValue != "") {
+        localStorage.removeItem("searchValue");
+        redirect("./search?value=" + searchValue);
+      } else {
+        //console.log("no success");
+      }
+    
+      if (searchParams && searchParams.value != "") {
+        searchValue = searchParams.value;
+      }
+    
+      if (searchValue && searchValue != "") {
+        axios
+          .get(domain + "/books/search/" + searchValue)
+          .then((res) => setData(res.data))
+          .catch((err) => console.log(err));
+      } else if (searchValue && searchValue == "") {
+        //console.log("no success");
+        axios
+          .get(domain + "/books/getAll")
+          .then((res) => setData(res.data)) //setData(res.data.items)
+          .catch((err) => console.log(err));
+      } else if (!searchValue) {
+        axios
+          .get(domain + "/books/getAll")
+          .then((res) => setData(res.data)) //setData(res.data.items)
+          .catch((err) => console.log(err));
+        //console.log("nope");
+      }
+    }, [domain, searchParams]);
 
   const products = bookdata.map((book: any, index: number) => ({
     id: index + 1,
@@ -135,7 +138,7 @@ const SearchPage = ({
           >
             Previous Page
           </button>
-          <span className="mx-2">
+          <span className="mx-2 text-dark">
             Page {currentPage} of {totalPages}
           </span>
           <button
