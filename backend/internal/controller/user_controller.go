@@ -65,7 +65,7 @@ func (h UserController) login(ctx *gin.Context) {
 
 	fmt.Print(request.GetUsername(), request.GetPassword())
 
-	token, err := h.userService.AuthenticateUser(ctx, request.GetUsername(), request.GetPassword())
+	user, token, err := h.userService.AuthenticateUser(ctx, request.GetUsername(), request.GetPassword())
 
 	if err != nil {
 		fmt.Println("login user failed:", err.Error())
@@ -75,7 +75,7 @@ func (h UserController) login(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"token": token})
+	ctx.JSON(http.StatusOK, gin.H{"token": token, "user": user})
 }
 func (h UserController) create(ctx *gin.Context) {
 	request := h.NewUserRequest()
