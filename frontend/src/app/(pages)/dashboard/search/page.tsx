@@ -30,7 +30,10 @@ const SearchPage = () => {
       if (searchValue && searchValue != "") {
         axios
           .get(domain + "/books/search/" + searchValue)
-          .then((res) => setData(res.data))
+          .then((res) => {
+            setData(res.data);
+            localStorage.removeItem("newsearch");
+          })
           .catch((err) => console.log(err));
           //localStorage.removeItem("newsearch");
       } else if (searchValue && searchValue == "") {
