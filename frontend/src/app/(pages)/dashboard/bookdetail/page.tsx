@@ -44,6 +44,7 @@ export default function Bookdetail({
   // };
 
   useEffect(() => {
+    
     const fetchData = () => {
       getBook(productId)
         .then((data) => {
@@ -63,6 +64,8 @@ export default function Bookdetail({
     }
   
     if (searchValue && searchValue !== "") {
+      localStorage.removeItem("searchValue");
+      localStorage.setItem("newsearch", searchValue);
       redirect("./search?value=" + searchValue);
     } else {
       //console.log("no success")

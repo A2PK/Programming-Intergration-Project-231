@@ -5,13 +5,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./search.css";
 import { redirect } from "next/navigation";
-const SearchPage = ({
-  searchParams,
-}: {
-  searchParams: {
-    value: string;
-  };
-}) => {
+const SearchPage = () => {
   const [bookdata, setData] = useState([]);
   const domain =
     (process.env.NEXT_PUBLIC_PROTO ?? "") +
@@ -19,25 +13,26 @@ const SearchPage = ({
     process.env.NEXT_PUBLIC_PORT;
     useEffect(() => {
       var searchValue: any;
-      searchValue = localStorage.getItem("searchValue");
+      if (typeof window !== 'undefined') {
+        searchValue = localStorage.getItem("searchValue");
+      }
       if (searchValue && searchValue != "") {
         localStorage.removeItem("searchValue");
+        localStorage.setItem("newsearch", searchValue);
         redirect("./search?value=" + searchValue);
       } else {
         //console.log("no success");
       }
-    
-      if (searchParams && searchParams.value != "") {
-        searchValue = searchParams.value;
-        console.log("search params is : " + searchParams.value);
+      if (typeof window !== 'undefined') {
+        searchValue = localStorage.getItem("newsearch");
+        
       }
-    console.log("search value is : " + searchValue);
-    
       if (searchValue && searchValue != "") {
         axios
           .get(domain + "/books/search/" + searchValue)
           .then((res) => setData(res.data))
           .catch((err) => console.log(err));
+          //localStorage.removeItem("newsearch");
       } else if (searchValue && searchValue == "") {
         //console.log("no success");
         axios
@@ -49,9 +44,10 @@ const SearchPage = ({
           .get(domain + "/books/getAll")
           .then((res) => setData(res.data)) //setData(res.data.items)
           .catch((err) => console.log(err));
+          
         //console.log("nope");
       }
-    }, [domain, searchParams]);
+    }, [domain]);
 
   const products = bookdata.map((book: any, index: number) => ({
     id: index + 1,

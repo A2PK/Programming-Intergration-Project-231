@@ -54,7 +54,7 @@ export default function NavBar(): React.JSX.Element {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <div className="navbar-nav ms-auto">
-            <Link className="nav-link" href="/dashboard/search">
+            <Link className="nav-link" href="/dashboard/search" onClick={() => localStorage.removeItem("newsearch")}>
               Books
             </Link>
             {id ? (

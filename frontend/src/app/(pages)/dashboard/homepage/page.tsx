@@ -10,6 +10,8 @@ export default function Homepage() {
     searchValue = localStorage.getItem("searchValue");
   }
     if (searchValue && searchValue != "") {
+      localStorage.removeItem("searchValue");
+      localStorage.setItem("newsearch", searchValue);
       redirect("./search?value=" + searchValue);
     } else {
       //console.log("no success");
@@ -34,7 +36,7 @@ export default function Homepage() {
               affects happiness.
             </p>
             <br></br>
-            <Link href={"./search"}>
+            <Link href={"./search"} onClick={() => localStorage.removeItem("newsearch")}>
               <button className="btn btn-dark rounded-5 fs-5 my-2 text-white">
                 Read More{" "}
               </button>
