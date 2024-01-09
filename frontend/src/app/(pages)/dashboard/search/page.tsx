@@ -5,52 +5,59 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./search.css";
 import { redirect } from "next/navigation";
+import { Loading } from "@/app/components/loading/loading";
+
 const SearchPage = () => {
   const [bookdata, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const domain =
     (process.env.NEXT_PUBLIC_PROTO ?? "") +
     (process.env.NEXT_PUBLIC_HOST ?? "") +
     process.env.NEXT_PUBLIC_PORT;
-    useEffect(() => {
-      var searchValue: any;
-      if (typeof window !== 'undefined') {
-        searchValue = localStorage.getItem("searchValue");
-      }
-      if (searchValue && searchValue != "") {
-        localStorage.removeItem("searchValue");
-        localStorage.setItem("newsearch", searchValue);
-        redirect("./search?value=" + searchValue);
-      } else {
-        //console.log("no success");
-      }
-      if (typeof window !== 'undefined') {
-        searchValue = localStorage.getItem("newsearch");
-        
-      }
-      if (searchValue && searchValue != "") {
-        axios
-          .get(domain + "/books/search/" + searchValue)
-          .then((res) => {
-            setData(res.data);
-            localStorage.removeItem("newsearch");
-          })
-          .catch((err) => console.log(err));
-          //localStorage.removeItem("newsearch");
-      } else if (searchValue && searchValue == "") {
-        //console.log("no success");
-        axios
-          .get(domain + "/books/getAll")
-          .then((res) => setData(res.data)) //setData(res.data.items)
-          .catch((err) => console.log(err));
-      } else if (!searchValue) {
-        axios
-          .get(domain + "/books/getAll")
-          .then((res) => setData(res.data)) //setData(res.data.items)
-          .catch((err) => console.log(err));
-          
-        //console.log("nope");
-      }
-    }, [domain]);
+  useEffect(() => {
+    var searchValue: any;
+    if (typeof window !== "undefined") {
+      searchValue = localStorage.getItem("searchValue");
+    }
+    if (searchValue && searchValue !== "") {
+      localStorage.removeItem("searchValue");
+      localStorage.setItem("newsearch", searchValue);
+      redirect("./search?value=" + searchValue);
+    } else {
+      //console.log("no success");
+    }
+    if (typeof window !== "undefined") {
+      searchValue = localStorage.getItem("newsearch");
+    }
+    if (searchValue && searchValue !== "") {
+      axios
+        .get(domain + "/books/search/" + searchValue)
+        .then((res) => {
+          setData(res.data);
+          setIsLoading(false);
+          localStorage.removeItem("newsearch");
+        })
+        .catch((err) => console.log(err));
+      //localStorage.removeItem("newsearch");
+    } else if (searchValue && searchValue == "") {
+      //console.log("no success");
+      axios
+        .get(domain + "/books/getAll")
+        .then((res) => {
+          setData(res.data);
+          setIsLoading(false);
+        }) //setData(res.data.items)
+        .catch((err) => console.log(err));
+    } else if (!searchValue) {
+      axios
+        .get(domain + "/books/getAll")
+        .then((res) => {
+          setData(res.data);
+          setIsLoading(false);
+        }) //setData(res.data.items)
+        .catch((err) => console.log(err));
+    }
+  }, [domain]);
 
   const products = bookdata.map((book: any, index: number) => ({
     id: index + 1,
@@ -80,6 +87,17 @@ const SearchPage = () => {
       setCurrentPage((prevPage) => prevPage - 1);
     }
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <SearchBar />
+        <div className="my-3">
+          <Loading />
+        </div>
+      </>
+    );
+  }
 
   return (
     <div>
