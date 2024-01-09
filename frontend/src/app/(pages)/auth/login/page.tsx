@@ -7,7 +7,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { User } from "@/app/models/User";
 
-const domain :string =
+const domain: string =
   (process.env.NEXT_PUBLIC_PROTO ?? "") +
   (process.env.NEXT_PUBLIC_HOST ?? "") +
   process.env.NEXT_PUBLIC_PORT;
@@ -16,13 +16,14 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+  const [waitResponse, setWaitResponse] = useState(false);
   const text = "Sign In";
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      console.log(domain);
+      setWaitResponse(true);
       const res = await axios.post(domain + "/users/login", {
         username,
         password,
@@ -33,6 +34,7 @@ export default function LoginPage() {
       router.push("/");
     } catch (error) {
       setErr("Invalid username or password");
+      setWaitResponse(false);
     }
   };
 
@@ -69,7 +71,12 @@ export default function LoginPage() {
             ></input>
           </div>
           <div className="d-grid gap-2">
-            <button id="signButton" type="submit" className="btn mx-4">
+            <button
+              id="signButton"
+              type="submit"
+              className="btn mx-4"
+              disabled={waitResponse}
+            >
               <strong>{text}</strong>
             </button>
           </div>
