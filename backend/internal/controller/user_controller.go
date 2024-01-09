@@ -3,7 +3,9 @@ package controller
 import (
 	"fmt"
 	entity "go-jwt/internal/entity"
+	middleware "go-jwt/internal/middleware"
 	request "go-jwt/internal/request"
+	token "go-jwt/internal/token"
 	usecase "go-jwt/internal/usecase"
 	"net/http"
 
@@ -20,23 +22,61 @@ func SetupUserRoutes(router *gin.Engine, userService usecase.UserUsecase) {
 		userService:    userService,
 		NewUserRequest: request.NewUserRequest,
 	}
-
-	userRoutes := router.Group("/users")
+	publicRoutes := router.Group("/public")
+	{
+		publicRoutes.POST("/login", userController.login)
+		publicRoutes.POST("/", userController.create)
+	}
+	userRoutes := router.Group("/users").Use(middleware.JwtAuthMiddleware())
 	{
 		userRoutes.Use(CORS())
 		userRoutes.POST("/", userController.create)
 		userRoutes.GET("/:id", userController.get)
 		userRoutes.PUT("/:id", userController.update)
 		userRoutes.DELETE("/:id", userController.delete)
-		userRoutes.POST("/login", userController.login)
+		//userRoutes.POST("/login", userController.login)
 		userRoutes.POST("/:id/reserve/:bookId", userController.reserve)
 		userRoutes.POST("/:id/borrow/:bookId", userController.borrow)
 		userRoutes.POST("/:id/extendBorrow/:bookId", userController.extendBorrow)
 		userRoutes.GET("/:id/borrows", userController.getBorrowList)
 		userRoutes.GET("/:id/reservations", userController.getReservationList)
+		userRoutes.GET("/currentuser", getCurrentUserID)
 	}
 }
+func getCurrentUserID(c *gin.Context) {
+	userID, err := token.ExtractTokenID(c)
 
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success", "ID": userID})
+}
+
+func (h UserController) login(ctx *gin.Context) {
+	request := h.NewUserRequest()
+
+	if err := request.Bind(ctx); err != nil {
+		fmt.Println("bind user failed:", err.Error())
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
+
+	fmt.Print(request.GetUsername(), request.GetPassword())
+
+	token, err := h.userService.AuthenticateUser(ctx, request.GetUsername(), request.GetPassword())
+
+	if err != nil {
+		fmt.Println("login user failed:", err.Error())
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		// 404 not found http status code
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "login failed", "error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"token": token})
+}
 func (h UserController) create(ctx *gin.Context) {
 	request := h.NewUserRequest()
 
@@ -136,30 +176,6 @@ func (h UserController) delete(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "user deleted"})
-}
-
-func (h UserController) login(ctx *gin.Context) {
-	request := h.NewUserRequest()
-
-	if err := request.Bind(ctx); err != nil {
-		fmt.Println("bind user failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	fmt.Print(request.GetUsername(), request.GetPassword())
-
-	user, err := h.userService.AuthenticateUser(ctx, request.GetUsername(), request.GetPassword())
-
-	if err != nil {
-		fmt.Println("login user failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
-		// 404 not found http status code
-		ctx.JSON(http.StatusNotFound, gin.H{"message": "login failed", "error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, user)
 }
 
 func (h UserController) reserve(ctx *gin.Context) {
