@@ -19,10 +19,7 @@ const SearchPage = ({
     process.env.NEXT_PUBLIC_PORT;
     useEffect(() => {
       var searchValue: any;
-      if (typeof window !== 'undefined') {
-        searchValue = localStorage.getItem("searchValue");
-      }
-      
+      searchValue = localStorage.getItem("searchValue");
       if (searchValue && searchValue != "") {
         localStorage.removeItem("searchValue");
         redirect("./search?value=" + searchValue);
@@ -32,7 +29,9 @@ const SearchPage = ({
     
       if (searchParams && searchParams.value != "") {
         searchValue = searchParams.value;
+        console.log("search params is : " + searchParams.value);
       }
+    console.log("search value is : " + searchValue);
     
       if (searchValue && searchValue != "") {
         axios
