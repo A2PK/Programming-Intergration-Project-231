@@ -68,7 +68,7 @@ func (h UserController) login(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println("login user failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		// ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "login failed", "error": err.Error()})
 		return
@@ -107,7 +107,7 @@ func (h UserController) create(ctx *gin.Context) {
 	})
 	if error != nil {
 		fmt.Println("create user failed:", error.Error())
-		ctx.AbortWithError(http.StatusBadRequest, error)
+		// ctx.AbortWithError(http.StatusBadRequest, error)
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "create failed", "error": error.Error()})
 	}
 	ctx.JSON(http.StatusOK, user)
@@ -121,7 +121,7 @@ func (h UserController) get(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println("get user failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		// ctx.AbortWithError(http.StatusBadRequest, err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "get failed", "error": err.Error()})
 		return
 	}
@@ -155,7 +155,7 @@ func (h UserController) update(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println("update user failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		// ctx.AbortWithError(http.StatusBadRequest, err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "update failed", "error": err.Error()})
 		return
 	}
@@ -184,7 +184,7 @@ func (h UserController) reserve(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println("reserve book failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		// ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Reservation failed", "error": err.Error()})
 		return
@@ -200,7 +200,7 @@ func (h UserController) borrow(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println("borrow book failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		// ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Borrow failed", "error": err.Error()})
 		return
@@ -216,7 +216,7 @@ func (h UserController) extendBorrow(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println("extend reserve book failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		// ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Borrow extend failed", "error": err.Error()})
 		return
@@ -232,7 +232,7 @@ func (h UserController) getBorrowList(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println("get borrow list failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		// ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Get borrow list failed", "error": err.Error()})
 		return
@@ -248,7 +248,7 @@ func (h UserController) getReservationList(ctx *gin.Context) {
 
 	if err != nil {
 		fmt.Println("get reservation list failed:", err.Error())
-		ctx.AbortWithError(http.StatusBadRequest, err)
+		// ctx.AbortWithError(http.StatusBadRequest, err)
 		// 404 not found http status code
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Get reservation list failed", "error": err.Error()})
 		return

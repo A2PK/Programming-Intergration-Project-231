@@ -14,6 +14,7 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
     try {
       const res = await axios.post(
         domain + "/users/" + id + "/extendBorrow/" + act.bookId,
+        null,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -21,12 +22,12 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
         }
       );
       if (res.status === 200) {
-        alert("Extend Successful");
-      } else {
-        alert("Extend Failed");
+        alert("Pending extension request! Please reload the page.");
       }
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data.error);
+      }
     }
   };
   return (
