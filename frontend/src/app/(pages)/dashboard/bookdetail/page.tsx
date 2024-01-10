@@ -17,7 +17,7 @@ export default function Bookdetail({
     productid: string;
   };
 }) {
-  <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" />;
+  <Script src="bootstrap/dist/js/bootstrap.bundle.min.js" />;
   //function to get the book by id
   const domain =
     (process.env.NEXT_PUBLIC_PROTO ?? "") +
@@ -27,9 +27,11 @@ export default function Bookdetail({
   const [today, setToday] = useState("");
   const [shownNotAvailable, setShownNotAvailable] = useState(false);
   const [bookingsuccess, setBookingsuccess] = useState(false);
+  const [bookingfailure, setBookingfailure] = useState(false);
   const productId = searchParams.productid;
   const [isLoading, setIsLoading] = useState(true);
   var ID: any;
+
   if (typeof window !== "undefined") {
     // Perform localStorage action
     ID = localStorage.getItem("userID");
@@ -100,17 +102,21 @@ export default function Bookdetail({
     event.preventDefault();
     try {
       const response = await axios.post(
-        domain + "/users/" + ID + "/reserve/" + productId
+        domain + "/users/" + ID + "/reserve/" + productId,
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
       );
       console.log("Reservation confirmed!", response.data);
+      setBookingsuccess(true);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error("Error confirming reservation:", error.message);
       } else {
         console.error("Unknown error:", error);
       }
+      setBookingfailure(true);
     }
-    setBookingsuccess(true);
   };
 
   if (isLoading) {
@@ -228,6 +234,15 @@ export default function Bookdetail({
                 </b>
                 : Remember to take the book <b>within 3 days</b> at the library.
                 Otherwise, you will be fined by caution.
+              </div>
+            )}
+            {bookingfailure && (
+              <div className="alert alert-danger text-dark" role="alert">
+                You cannot reserve this book.<br></br>
+                <b>
+                  <u>Note</u>
+                </b>
+                : Please check your authorization. Try to login again.
               </div>
             )}
           </div>

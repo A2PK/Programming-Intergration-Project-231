@@ -10,6 +10,7 @@ const getBook = async (realid: string): Promise<Book> => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
     })
     .then((response) => {

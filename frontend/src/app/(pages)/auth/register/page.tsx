@@ -22,7 +22,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(domain + "/users", {
+      const res = await axios.post(domain + "/public", {
         username,
         password,
       });

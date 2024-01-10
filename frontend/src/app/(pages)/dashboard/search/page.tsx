@@ -31,18 +31,22 @@ const SearchPage = () => {
     }
     if (searchValue && searchValue !== "") {
       axios
-        .get(domain + "/books/search/" + searchValue)
+        .get(domain + "/books/search/" + searchValue, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
         .then((res) => {
           setData(res.data);
-          setIsLoading(false);
           localStorage.removeItem("newsearch");
+          setIsLoading(false);
         })
         .catch((err) => console.log(err));
       //localStorage.removeItem("newsearch");
     } else if (searchValue && searchValue == "") {
       //console.log("no success");
       axios
-        .get(domain + "/books/getAll")
+        .get(domain + "/books/getAll", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
         .then((res) => {
           setData(res.data);
           setIsLoading(false);
@@ -50,7 +54,9 @@ const SearchPage = () => {
         .catch((err) => console.log(err));
     } else if (!searchValue) {
       axios
-        .get(domain + "/books/getAll")
+        .get(domain + "/books/getAll", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
         .then((res) => {
           setData(res.data);
           setIsLoading(false);

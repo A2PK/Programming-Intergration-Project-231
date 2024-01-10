@@ -8,6 +8,7 @@ const getUser = async (id: string) => {
   return await axios.get(domain + "/users/" + id, {
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
     },
   });
 };
@@ -16,6 +17,7 @@ const getBorrows = async (id: string) => {
   return await axios.get(domain + "/users/" + id + "/borrows", {
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
     },
   });
 };
@@ -23,6 +25,7 @@ const getReservations = async (id: string) => {
   return await axios.get(domain + "/users/" + id + "/reservations", {
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
     },
   });
 };

@@ -24,11 +24,12 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       setWaitResponse(true);
-      const res = await axios.post(domain + "/users/login", {
+      const res = await axios.post(domain + "/public/login", {
         username,
         password,
       });
-      const user: User = res.data;
+      localStorage.setItem("token", res.data.token);
+      const user: User = res.data.user;
       localStorage.setItem("userID", String(user.id));
       localStorage.setItem("username", user.username);
       router.push("/");

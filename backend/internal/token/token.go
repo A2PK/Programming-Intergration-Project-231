@@ -2,9 +2,7 @@ package token
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
-	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -12,16 +10,9 @@ import (
 
 func GenerateToken(userID string) (string, error) {
 
-	token_lifespan, err := strconv.Atoi("1")
-
-	if err != nil {
-		return "", err
-	}
-
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["user_id"] = userID
-	claims["exp"] = time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte("yoursecretstring"))

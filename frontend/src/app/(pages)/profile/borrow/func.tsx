@@ -10,11 +10,21 @@ const domain =
 export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
   const handleExtend = async () => {
     const id = localStorage.getItem("userID");
+    const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        domain + "/users/" + id + "/extendBorrow/" + String(act.bookId),
+        domain + "/users/" + id + "/extendBorrow/" + act.bookId,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      console.log(res.data.message);
+      if (res.status === 200) {
+        alert("Extend Successful");
+      } else {
+        alert("Extend Failed");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -42,7 +52,7 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
 
 export function BorrowHeader() {
   return (
-    <div className="row mb-3 fw-bold text-dark" >
+    <div className="row mb-3 fw-bold text-dark">
       <div className="col-1">No.</div>
       <div className="col-5">Book Name</div>
       <div className="col-4">Dued Date</div>
