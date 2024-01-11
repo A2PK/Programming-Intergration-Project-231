@@ -17,7 +17,7 @@ export default function Bookdetail({
     productid: string;
   };
 }) {
-  <Script src="bootstrap/dist/js/bootstrap.bundle.min.js" />;
+  <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" />;
   //function to get the book by id
   const domain =
     (process.env.NEXT_PUBLIC_PROTO ?? "") +
