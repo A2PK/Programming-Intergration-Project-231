@@ -5,8 +5,13 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 export default function Homepage() {
   useEffect(() => {
-    const searchValue = localStorage.getItem("searchValue");
+    var searchValue: any;
+  if (typeof window !== 'undefined') {
+    searchValue = localStorage.getItem("searchValue");
+  }
     if (searchValue && searchValue != "") {
+      localStorage.removeItem("searchValue");
+      localStorage.setItem("newsearch", searchValue);
       redirect("./search?value=" + searchValue);
     } else {
       //console.log("no success");
@@ -24,15 +29,15 @@ export default function Homepage() {
             <p className="fs-1 fw-semibold text-danger-emphasis">
               The Psychology of Money
             </p>
-            <p className="fs-5 fw-light fst-italic" style={{ width: "85%" }}>
+            <p className="fs-5 fw-light fst-italic text-dark" style={{ width: "85%" }}>
               The Psychology of Money is a book written by Morgan Housel that
               explores the psychology behind the way people approach and think
               about money. The book discusses various topics such as how money
               affects happiness.
             </p>
             <br></br>
-            <Link href={"./search"}>
-              <button className="btn btn-dark rounded-5 fs-5 my-2">
+            <Link href={"./search"} onClick={() => localStorage.removeItem("newsearch")}>
+              <button className="btn btn-dark rounded-5 fs-5 my-2 text-white">
                 Read More{" "}
               </button>
             </Link>
@@ -75,7 +80,7 @@ export default function Homepage() {
                     />
                   </button>
                 </Link>
-                <p className="text-md-center mt-1">Death's Head</p>
+                <p className="text-md-center mt-1 text-dark">Death&apos;s Head</p>
               </div>
               <div className="mx-2 text-center">
                 <Link
@@ -96,7 +101,7 @@ export default function Homepage() {
                     />
                   </button>
                 </Link>
-                <p className="text-md-center mt-1">The Night Shift</p>
+                <p className="text-md-center mt-1 text-dark">The Night Shift</p>
               </div>
               <div className="mx-2 text-center">
                 <Link
@@ -117,7 +122,7 @@ export default function Homepage() {
                     />
                   </button>
                 </Link>
-                <p className="text-md-center mt-1">The Wager</p>
+                <p className="text-md-center mt-1 text-dark" >The Wager</p>
               </div>
             </div>
           </div>
@@ -149,10 +154,10 @@ export default function Homepage() {
               />
             </button>
           </Link>
-          <p className="text-center fst-italic fw-semibold fs-4">
+          <p className="text-center fst-italic fw-semibold fs-4 text-dark">
             No 1. The Psychology of Money
           </p>
-          <p className="text-center fw-normal fs-5">Author: Morgan Housel</p>
+          <p className="text-center fw-normal fs-5 text-dark">Author: Morgan Housel</p>
         </div>
       </div>
     </div>

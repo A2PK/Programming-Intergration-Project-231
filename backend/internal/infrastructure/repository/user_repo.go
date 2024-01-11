@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	entity "go-jwt/internal/entity"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -90,8 +89,7 @@ func (userRepo *userRepository) UpdateUser(ctx context.Context, id string, data 
 
 	ID, _ := primitive.ObjectIDFromHex(id)
 
-	fmt.Println(data)
-	result, err := userRepo.userCollection.
+	_, err := userRepo.userCollection.
 		UpdateOne(context.Background(),
 			bson.M{"_id": ID},
 			bson.M{
@@ -101,8 +99,6 @@ func (userRepo *userRepository) UpdateUser(ctx context.Context, id string, data 
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(result)
 
 	return data, nil
 }

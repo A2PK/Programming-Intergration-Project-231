@@ -1,3 +1,4 @@
+"use client"
 import "./signform.css";
 import Image from "next/image";
 import logo from "public/Logo_BK.png";

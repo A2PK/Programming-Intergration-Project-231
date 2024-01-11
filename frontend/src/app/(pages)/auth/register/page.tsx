@@ -1,15 +1,15 @@
 "use client";
 import "./page.css";
 import Image from "next/image";
-import logo from "public/Logo_BK.png";
+import logo from "./Logo_BK.png";
 import { FormEvent, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { User } from "@/app/models/User";
 
 const domain =
-  process.env.NEXT_PUBLIC_PROTO +
-  process.env.NEXT_PUBLIC_HOST +
+  (process.env.NEXT_PUBLIC_PROTO ?? "") +
+  (process.env.NEXT_PUBLIC_HOST ?? "") +
   process.env.NEXT_PUBLIC_PORT;
 
 export default function RegisterPage() {
@@ -22,7 +22,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(domain + "/users", {
+      const res = await axios.post(domain + "/public", {
         username,
         password,
       });
@@ -36,7 +36,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="h-100 text-center d-flex justify-content-center align-items-center">
+    <div className="h-100 text-center d-flex justify-content-center align-items-center text-dark">
       <span id="form" className="border rounded-3 p-4 shadow bg-white">
         <form onSubmit={handleSubmit}>
           <h1>

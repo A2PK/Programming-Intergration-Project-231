@@ -19,7 +19,7 @@ export default function DashboardLayout({
           <div className="col-sm-3 col-lg-2">
             <ProfileSidebar />
           </div>
-          <div className="col-sm-9 col-lg-10">
+          <div className="col-sm-9 col-lg-10 text-dark">
             <div className="shadow-sm rounded-4 p-4">{children}</div>
           </div>
         </div>

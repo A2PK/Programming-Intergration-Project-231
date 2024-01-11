@@ -8,7 +8,12 @@ import { Loading } from "@/app/components/loading/loading";
 export default function ReservationPage() {
   const [reservedBooks, setReservedBooks] = useState<UserActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const id = localStorage.getItem("userID");
+  var id: any;
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+    id = localStorage.getItem("userID");
+  }
+  //const id = typeof window ? null : localStorage.getItem("userID");
 
   useEffect(() => {
     const fetchData = async () => {

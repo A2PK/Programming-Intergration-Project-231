@@ -1,6 +1,5 @@
 "use client";
 import { Navbar } from "react-bootstrap";
-import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookReader,

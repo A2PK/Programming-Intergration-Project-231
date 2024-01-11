@@ -7,37 +7,40 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { User } from "@/app/models/User";
 
-const domain =
-  process.env.NEXT_PUBLIC_PROTO +
-  process.env.NEXT_PUBLIC_HOST +
+const domain: string =
+  (process.env.NEXT_PUBLIC_PROTO ?? "") +
+  (process.env.NEXT_PUBLIC_HOST ?? "") +
   process.env.NEXT_PUBLIC_PORT;
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+  const [waitResponse, setWaitResponse] = useState(false);
   const text = "Sign In";
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      console.log(domain);
-      const res = await axios.post(domain + "/users/login", {
+      setWaitResponse(true);
+      const res = await axios.post(domain + "/public/login", {
         username,
         password,
       });
-      const user: User = res.data;
+      localStorage.setItem("token", res.data.token);
+      const user: User = res.data.user;
       localStorage.setItem("userID", String(user.id));
       localStorage.setItem("username", user.username);
       router.push("/");
     } catch (error) {
       setErr("Invalid username or password");
+      setWaitResponse(false);
     }
   };
 
   return (
-    <div className="h-100 text-center d-flex justify-content-center align-items-center">
+    <div className="h-100 text-center d-flex justify-content-center align-items-center text-dark">
       <span id="form" className="border rounded-3 p-4 shadow bg-white">
         <form onSubmit={handleSubmit}>
           <h1>
@@ -69,7 +72,12 @@ export default function LoginPage() {
             ></input>
           </div>
           <div className="d-grid gap-2">
-            <button id="signButton" type="submit" className="btn mx-4">
+            <button
+              id="signButton"
+              type="submit"
+              className="btn mx-4"
+              disabled={waitResponse}
+            >
               <strong>{text}</strong>
             </button>
           </div>

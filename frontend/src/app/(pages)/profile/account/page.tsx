@@ -8,7 +8,11 @@ import { useEffect, useState } from "react";
 export default function AccountPage() {
   const [user, setUser] = useState<User>();
   const [isLoading, setIsLoading] = useState(true);
-  const id = localStorage.getItem("userID");
+  var id: any;
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+    id = localStorage.getItem("userID");
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +37,7 @@ export default function AccountPage() {
 
   return (
     <>
-      <h2>Personal Information</h2>
+      <h2 className="text-dark">Personal Information</h2>
       <hr />
       {user ? <PersonalInfo user={user} /> : <></>}
     </>

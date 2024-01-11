@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	entity "go-jwt/internal/entity"
 	repository "go-jwt/internal/infrastructure/repository"
+	token "go-jwt/internal/token"
 	"time"
 )
 
@@ -20,7 +20,7 @@ type UserUsecase interface {
 	GetUser(ctx context.Context, id string) (*entity.User, error)
 	UpdateUser(ctx context.Context, id string, data *entity.User) (*entity.User, error)
 	DeleteUser(ctx context.Context, id string) error
-	AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, error)
+	AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, string, error)
 	ReserveBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
 	BorrowBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
 	ExtendBorrowBook(ctx context.Context, userID string, bookID string) (*entity.User, error)
@@ -49,22 +49,33 @@ func (s *userUsecase) DeleteUser(ctx context.Context, id string) error {
 	return s.userRepo.DeleteUser(ctx, id)
 }
 
-func (s *userUsecase) AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, error) {
+func (s *userUsecase) AuthenticateUser(ctx context.Context, username string, password string) (*entity.User, string, error) {
 	user, err := s.userRepo.GetUserByUsername(ctx, username)
-
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	if user == nil {
-		return nil, entity.ERR_USER_NOT_FOUND
+		return nil, "", entity.ERR_USER_NOT_FOUND
 	}
+	//skip Verify package: we can use hashed for pw
+	// hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password),bcrypt.DefaultCost)
+
+	// func VerifyPassword(password,hashedPassword string) error {
+	// 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+	// }
 
 	if user.Password != password {
-		return nil, entity.ERR_USER_PASSWORD_NOT_MATCH
+		return nil, "", entity.ERR_USER_PASSWORD_NOT_MATCH
 	}
 
-	return user, nil
+	token, err := token.GenerateToken(user.ID.String())
+
+	if err != nil {
+		return nil, "", err
+	}
+
+	return user, token, nil
 }
 
 func (s *userUsecase) ReserveBook(ctx context.Context, userID string, bookID string) (*entity.User, error) {
@@ -123,9 +134,6 @@ func (s *userUsecase) ReserveBook(ctx context.Context, userID string, bookID str
 
 	// update user reserving book
 	user, err = s.userRepo.UpdateUser(ctx, userID, user)
-
-	//print user after
-	fmt.Println("user after", user)
 
 	if err != nil {
 		return nil, err
@@ -200,9 +208,6 @@ func (s *userUsecase) BorrowBook(ctx context.Context, userID string, bookID stri
 
 	// update user reserving book
 	user, err = s.userRepo.UpdateUser(ctx, userID, user)
-
-	//print user after
-	fmt.Println("user after", user)
 
 	if err != nil {
 		return nil, err

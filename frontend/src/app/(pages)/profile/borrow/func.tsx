@@ -3,20 +3,31 @@ import { parseGoTime, checkGoNull } from "@/app/api/time";
 import axios from "axios";
 
 const domain =
-  process.env.NEXT_PUBLIC_PROTO +
-  process.env.NEXT_PUBLIC_HOST +
+  (process.env.NEXT_PUBLIC_PROTO ?? "") +
+  (process.env.NEXT_PUBLIC_HOST ?? "") +
   process.env.NEXT_PUBLIC_PORT;
 
 export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
   const handleExtend = async () => {
     const id = localStorage.getItem("userID");
+    const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        domain + "/users/" + id + "/extendBorrow/" + String(act.bookId),
+        domain + "/users/" + id + "/extendBorrow/" + act.bookId,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-      console.log(res.data.message);
+      if (res.status === 200) {
+        alert("Pending extension request! Please reload the page.");
+      }
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data.error);
+      }
     }
   };
   return (
@@ -31,7 +42,7 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
       <div className="col-2">
         <button
           onClick={handleExtend}
-          className="btn btn-outline-secondary btn-sm"
+          className="btn btn-outline-secondary btn-sm text-dark"
         >
           Extend
         </button>
@@ -42,7 +53,7 @@ export function BorrowRow({ no, act }: { no: number; act: UserActivity }) {
 
 export function BorrowHeader() {
   return (
-    <div className="row mb-3 fw-bold">
+    <div className="row mb-3 fw-bold text-dark">
       <div className="col-1">No.</div>
       <div className="col-5">Book Name</div>
       <div className="col-4">Dued Date</div>
@@ -53,7 +64,7 @@ export function BorrowHeader() {
 
 export function HistoryRow({ no, act }: { no: number; act: UserActivity }) {
   return (
-    <div className="row mb-3">
+    <div className="row mb-3 text-dark">
       <div className="col-1">{no}</div>
       <div className="col-5">{act.bookName}</div>
       <div className="col-3">{parseGoTime(act.startDate)}</div>

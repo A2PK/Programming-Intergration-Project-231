@@ -3,7 +3,6 @@
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "types": ["jquery"],
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -21,7 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
